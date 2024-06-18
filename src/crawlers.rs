@@ -1,15 +1,71 @@
-use chrono::{DateTime, Utc};
+use chrono::Utc;
 use reqwest::blocking::Client;
 use reqwest::Url;
 use scraper::{Html, Selector};
-use select::document::Document;
-use select::predicate::{Attr, Name, Predicate};
-use std::collections::{HashSet, VecDeque};
 use std::error::Error;
 use std::fs::File;
 use std::io::{self, BufWriter, Write};
-use std::path::PathBuf;
 use url::ParseError;
+
+fn user_input() -> Result<String, Box<dyn Error>> {
+    println!("Please enter the URL of the website to analyze (e.g., https://example.com): ");
+    io::stdout().flush()?; // Ensure the prompt is displayed immediately
+
+    let mut url_input = String::new();
+    io::stdin().read_line(&mut url_input)?;
+
+    // Trim any extra whitespace or newline characters
+    let url = url_input.trim().to_string();
+
+    // Validate URL format
+    Url::parse(&url)?;
+
+    Ok(url)
+}
+
+pub fn content_quality() -> Result<(), Box<dyn Error>> {
+    // Get user input for URL
+    let url = user_input()?;
+
+    // Fetch HTML content
+    let client = Client::new();
+    let response = client.get(&url).send()?;
+    let html = response.text()?;
+
+    // Parse HTML
+    let document = Html::parse_document(&html);
+
+    // Extract text content from paragraphs
+    let paragraph_selector = Selector::parse("p").unwrap();
+    let mut content = String::new();
+    for paragraph in document.select(&paragraph_selector) {
+        content.push_str(paragraph.text().collect::<String>().as_str());
+        content.push_str("\n");
+    }
+
+    // Perform basic readability analysis (Flesch-Kincaid readability score)
+    let num_words = content.split_whitespace().count();
+    let num_sentences = content.split_terminator('.').count()
+        + content.split_terminator('!').count()
+        + content.split_terminator('?').count();
+    let num_syllables = content
+        .split_whitespace()
+        .map(|word| syllables_count(word))
+        .sum::<usize>();
+
+    let flesch_reading_ease = 206.835
+        - 1.015 * (num_words as f64 / num_sentences as f64)
+        - 84.6 * (num_syllables as f64 / num_words as f64);
+
+    println!("Flesch Reading Ease Score: {:.2}", flesch_reading_ease);
+
+    Ok(())
+}
+
+// Simple syllable counter (approximation)
+fn syllables_count(word: &str) -> usize {
+    word.chars().filter(|&c| "aeiouAEIOU".contains(c)).count()
+}
 
 pub fn get_headings() -> Result<Vec<(String, String)>, Box<dyn Error>> {
     // Prompt the user for URL

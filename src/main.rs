@@ -9,23 +9,16 @@ use url::Url;
 mod crawlers;
 
 fn crawl_all() -> Result<(), Box<dyn Error>> {
+    // Prompt the user for the URL
+    println!("Please enter the URL of the website to analyze (e.g., https://example.com): ");
     let mut url_input = String::new();
     io::stdin().read_line(&mut url_input)?;
     let url_input = url_input.trim();
 
-    // Prompt the user for a URL
-    print!("Please enter the URL of the website to analyze (e.g., https://example.com): ");
-    io::stdout().flush()?;
-
     // Prompt the user for parameters to ignore
-    print!("Enter URL parameters to ignore, separated by commas (e.g., utm_source,session_id): ");
-    io::stdout().flush()?;
-
+    println!("Enter URL parameters to ignore, separated by commas (e.g., utm_source,session_id): ");
     let mut ignore_params_input = String::new();
     io::stdin().read_line(&mut ignore_params_input)?;
-    let ignore_params_input = ignore_params_input.trim();
-
-    // Parse the list of parameters to ignore
     let ignore_params: HashSet<String> = ignore_params_input
         .split(',')
         .map(|s| s.trim().to_string())
@@ -40,7 +33,7 @@ fn crawl_all() -> Result<(), Box<dyn Error>> {
     // Create a reqwest client
     let client = Client::new();
 
-    // Set up the structures for crawling
+    // Set up structures for crawling
     let mut visited: HashSet<String> = HashSet::new();
     let mut to_visit: VecDeque<String> = VecDeque::new();
     let mut all_links: HashSet<String> = HashSet::new();
@@ -60,7 +53,7 @@ fn crawl_all() -> Result<(), Box<dyn Error>> {
         println!("Visiting: {}", current_url);
         visited.insert(current_url.clone());
 
-        // Fetch the HTML content of the current page
+        // Fetch HTML content of the current page
         let response = match client.get(&current_url)
             .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
             .send() {
@@ -79,7 +72,7 @@ fn crawl_all() -> Result<(), Box<dyn Error>> {
             }
         };
 
-        // Parse the HTML
+        // Parse HTML
         let document = Html::parse_document(&response_text);
 
         // Select all anchor tags
@@ -117,9 +110,11 @@ fn crawl_all() -> Result<(), Box<dyn Error>> {
             }
         }
     }
+
     // Output results
     println!("Total pages and folders analyzed: {}", visited.len());
     println!("All links saved to: {}", output_file);
+
     Ok(())
 }
 
@@ -127,15 +122,46 @@ fn main() -> Result<(), Box<dyn Error>> {
     // Print asci art
     println!(
         r#"
+                               .-----.
+                              /7  .  (
+                             /   .-.  \
+                            /   /   \  \
+                           / `  )   (   )
+                          / `   )   ).  \
+                        .'  _.   \_/  . |
+       .--.           .' _.' )`.        |
+      (    `---...._.'   `---.'_)    ..  \
+       \            `----....___    `. \  |
+        `.           _ ----- _   `._  )/  |
+          `.       /"  \   /"  \`.  `._   |
+            `.    ((O)` ) ((O)` ) `.   `._\
+              `-- '`---'   `---' )  `.    `-.
+                 /                  ` \      `-.
+               .'                      `.       `.
+              /                     `  ` `.       `-.
+       .--.   \ ===._____.======. `    `   `. .___.--`     .''''.
+      ' .` `-. `.                )`. `   ` ` \          .' . '  8)
+     (8  .  ` `-.`.               ( .  ` `  .`\      .'  '    ' /
+      \  `. `    `-.               ) ` .   ` ` \  .'   ' .  '  /
+       \ ` `.  ` . \`.    .--.     |  ` ) `   .``/   '  // .  /
+        `.  ``. .   \ \   .-- `.  (  ` /_   ` . / ' .  '/   .'
+          `. ` \  `  \ \  '-.   `-'  .'  `-.  `   .  .'/  .'
+            \ `.`.  ` \ \    ) /`._.`       `.  ` .  .'  /
+             |  `.`. . \ \  (.'               `.   .'  .'
+          __/  .. \ \ ` ) \                     \.' .. \__
+   .-._.-'     '"  ) .-'   `.                   (  '"     `-._.--.
+  (_________.-====' / .' /\_)`--..__________..-- `====-. _________)
+                   (.'(.'
 
-|  \     /  \                                      |  \               /      \                                  |  \                    
-| $$\   /  $$  ______    ______    _______   ______| $$_______       |  $$$$$$\  ______   ______   __   __   __ | $$  ______    ______  
-| $$$\ /  $$$ |      \  /      \  /       \ /      \\$/       \      | $$   \$$ /      \ |      \ |  \ |  \ |  \| $$ /      \  /      \ 
-| $$$$\  $$$$  \$$$$$$\|  $$$$$$\|  $$$$$$$|  $$$$$$\|  $$$$$$$      | $$      |  $$$$$$\ \$$$$$$\| $$ | $$ | $$| $$|  $$$$$$\|  $$$$$$\
-| $$\$$ $$ $$ /      $$| $$   \$$| $$      | $$  | $$ \$$    \       | $$   __ | $$   \$$/      $$| $$ | $$ | $$| $$| $$    $$| $$   \$$
-| $$ \$$$| $$|  $$$$$$$| $$      | $$_____ | $$__/ $$ _\$$$$$$\      | $$__/  \| $$     |  $$$$$$$| $$_/ $$_/ $$| $$| $$$$$$$$| $$      
-| $$  \$ | $$ \$$    $$| $$       \$$     \ \$$    $$|       $$       \$$    $$| $$      \$$    $$ \$$   $$   $$| $$ \$$     \| $$      
- \$$      \$$  \$$$$$$$ \$$        \$$$$$$$  \$$$$$$  \$$$$$$$         \$$$$$$  \$$       \$$$$$$$  \$$$$$\$$$$  \$$  \$$$$$$$ \$$      
+                           ,-,--.  ,--.--------.                           _,---.                 _,.---._         _,---.   
+  .-.,.---.  .--.-. .-.-.,-.'-  _\/==/,  -   , -\,--.-.  .-,--.         .-`.' ,  \  .-.,.---.   ,-.' , -  `.   _.='.'-,  \  
+ /==/  `   \/==/ -|/=/  /==/_ ,_.'\==\.-.  - ,-./==/- / /=/_ /         /==/_  _.-' /==/  `   \ /==/_,  ,  - \ /==.'-     /  
+|==|-, .=., |==| ,||=| -\==\  \    `--`\==\- \  \==\, \/=/. /         /==/-  '..-.|==|-, .=., |==|   .=.     /==/ -   .-'   
+|==|   '='  /==|- | =/  |\==\ -\        \==\_ \  \==\  \/ -/          |==|_ ,    /|==|   '='  /==|_ : ;=:  - |==|_   /_,-.  
+|==|- ,   .'|==|,  \/ - |_\==\ ,\       |==|- |   |==|  ,_/           |==|   .--' |==|- ,   .'|==| , '='     |==|  , \_.' ) 
+|==|_  . ,'.|==|-   ,   /==/\/ _ |      |==|, |   \==\-, /            |==|-  |    |==|_  . ,'. \==\ -    ,_ /\==\-  ,    (  
+/==/  /\ ,  )==/ , _  .'\==\ - , /      /==/ -/   /==/._/             /==/   \    /==/  /\ ,  ) '.='. -   .'  /==/ _  ,  /  
+`--`-`--`--'`--`..---'   `--`---'       `--`--`   `--`-`              `--`---'    `--`-`--`--'    `--`--''    `--`------'   
     "#
     );
 
@@ -145,14 +171,15 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("2. Crawl a specific URL");
     println!("3. Crawl a page and get its Headings");
     println!("4. Crawl a website and generate a sitemap");
+    println!("5. Content Quality");
 
     // Read the user's choice
     let mut choice = String::new();
     io::stdin().read_line(&mut choice)?;
 
     // Parse the user's choice
-    let choice = match choice.trim().parse::<i32>() {
-        Ok(choice) => choice,
+    let choice: i32 = match choice.trim().parse() {
+        Ok(num) => num,
         Err(_) => {
             println!("Invalid choice. Exiting...");
             return Ok(());
@@ -160,10 +187,13 @@ fn main() -> Result<(), Box<dyn Error>> {
     };
 
     match choice {
-        1 => crawl_all()?,
+        1 => {
+            // Crawl the entire website
+            crawl_all().expect("Failed to crawl website");
+        }
         2 => {
             // Crawl a specific URL
-            crawlers::crawl_page()?;
+            crawlers::crawl_page().expect("Failed to crawl page");
         }
         3 => {
             // Crawl a page and get its headings
@@ -172,6 +202,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         4 => {
             // Crawl a website and generate a sitemap
             crawlers::generate_sitemaps().expect("Failed to generate sitemap");
+        }
+        5 => {
+            // Content Quality
+            crawlers::content_quality().expect("Failed to get content quality");
         }
         _ => {
             println!("Invalid choice. Exiting...");
