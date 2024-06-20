@@ -1,4 +1,10 @@
-<!doctype html>
+use std::fs::{self, File};
+use std::io::{self, prelude::*};
+use std::path::{Path, PathBuf};
+
+// Function to create an HTML file with the provided HTML template content
+pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
+    let html_report = r#"<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -68,4 +74,40 @@
       </ul>
     </div>
   </body>
-</html>
+</html>"#;
+
+    // Specify the path for the HTML file
+    let file_path = ".report.html";
+
+    // Create or open the file for writing
+    let mut file = File::create(file_path)?;
+
+    // Write the HTML content to the file
+    file.write_all(html_report.as_bytes())?;
+
+    println!("HTML file '{}' created successfully.", file_path);
+
+    // Convert the file to UTF-8
+    convert_to_utf8(file_path)?;
+
+    Ok(())
+}
+
+// Function to convert a file to UTF-8 encoding
+fn convert_to_utf8(file_path: impl AsRef<Path>) -> Result<(), Box<dyn std::error::Error>> {
+    let file_path = file_path.as_ref();
+
+    // Read the file content
+    let content = fs::read_to_string(file_path)?;
+
+    // Write back to the file with UTF-8 encoding
+    let mut file = File::create(file_path)?;
+    file.write_all(content.as_bytes())?;
+
+    println!(
+        "Converted file '{}' to UTF-8 successfully.",
+        file_path.display()
+    );
+
+    Ok(())
+}

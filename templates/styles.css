@@ -1,0 +1,10 @@
+body {
+  font-family: Arial, sans-serif;
+}
+.section {
+  margin-bottom: 20px;
+}
+h2 {
+  border-bottom: 1px solid #ccc;
+  color: red;
+}

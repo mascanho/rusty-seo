@@ -1,18 +1,18 @@
 use reqwest::header::USER_AGENT;
 use scraper::{Html, Selector};
 use serde::Serialize;
+use std::collections::HashMap;
 use std::error::Error;
-use std::{collections::HashMap, io};
+use std::io;
 use tera::{Context, Tera};
-use tokio;
+
+use crate::libs;
 
 // Function to read user input for URL
 fn user_input() -> Result<String, Box<dyn Error>> {
     println!("Please enter the URL of the website to analyze (e.g., https://example.com): ");
     let mut url_input = String::new();
-
     io::stdin().read_line(&mut url_input)?; // Read user input from stdin
-
     Ok(url_input.trim().to_string()) // Trim whitespace and return the URL
 }
 
@@ -20,17 +20,11 @@ fn user_input() -> Result<String, Box<dyn Error>> {
 struct SEOData {
     title: Option<String>,
     meta_description: Option<String>,
-    meta_keywords: Option<String>,
+    meta_keywords: Option<String>, // Change to Option<String> to handle optional meta keywords
     headings: HashMap<String, Vec<String>>,
     image_alt_texts: Vec<String>,
-    keyword_density: f64,
-    link_density: f64,
     internal_links: Vec<String>,
     external_links: Vec<String>,
-    external_link_density: f64,
-    unique_internal_links: f64,
-    unique_external_links: f64,
-    internal_link_density: f64,
 }
 
 // Function to fetch HTML content from a URL
@@ -49,6 +43,7 @@ async fn fetch_html(url: &str) -> Result<String, Box<dyn Error>> {
     Ok(response.text().await?) // Return the HTML content as a string
 }
 
+// Function to analyze SEO metrics from HTML
 fn analyze_seo(html: &str) -> SEOData {
     let document = Html::parse_document(html);
 
@@ -65,10 +60,12 @@ fn analyze_seo(html: &str) -> SEOData {
         .and_then(|elem| elem.value().attr("content").map(String::from));
 
     // Extract meta keywords
+    let meta_keywords_selector = Selector::parse("meta[name='keywords']").unwrap();
     let meta_keywords = document
-        .select(&Selector::parse("meta[name='keywords']").unwrap())
+        .select(&meta_keywords_selector)
+        .flat_map(|elem| elem.value().attr("content"))
         .next()
-        .and_then(|elem| elem.value().attr("content").map(String::from));
+        .map(String::from);
 
     // Extract headings (h1-h6)
     let headings_selector = Selector::parse("h1, h2, h3, h4, h5, h6").unwrap();
@@ -85,42 +82,45 @@ fn analyze_seo(html: &str) -> SEOData {
 
     // Extract image alt texts
     let image_selector = Selector::parse("img").unwrap();
-    let mut image_alt_texts = Vec::new();
+    let image_alt_texts: Vec<String> = document
+        .select(&image_selector)
+        .filter_map(|elem| elem.value().attr("alt").map(String::from))
+        .collect();
 
-    for img in document.select(&image_selector) {
-        if let Some(alt) = img.value().attr("alt") {
-            image_alt_texts.push(alt.to_string());
-        }
-    }
+    // Extract internal and external links
+    let link_selector = Selector::parse("a").unwrap();
+    let (internal_links, external_links): (Vec<String>, Vec<String>) = document
+        .select(&link_selector)
+        .map(|link| link.value().attr("href").unwrap_or("").to_string())
+        .partition(|link| link.starts_with('/'));
 
-    // Create SEOData struct
+    // Initialize SEOData struct
     SEOData {
         title,
         meta_description,
         meta_keywords,
         headings,
         image_alt_texts,
-        keyword_density: 0.0, // Placeholder values
-        link_density: 0.0,
-        internal_links: Vec::new(),
-        external_links: Vec::new(),
-        external_link_density: 0.0,
-        unique_internal_links: 0.0,
-        unique_external_links: 0.0,
-        internal_link_density: 0.0,
+        internal_links,
+        external_links,
     }
 }
 
+// Function to generate a full SEO report
 pub async fn generate_full_report() -> Result<(), Box<dyn Error>> {
-    let html = fetch_html(&user_input()?).await?;
-    let seo_data = analyze_seo(&html);
+    // check for folder and files
+    libs::create_html_file().unwrap();
 
-    let tera = Tera::new("templates/**/*")?;
+    let url = user_input()?; // Read user input for URL
+    let html = fetch_html(&url).await?; // Fetch HTML content from the provided URL
+    let seo_data = analyze_seo(&html); // Analyze SEO metrics from the fetched HTML
+
+    let tera = Tera::new("*.html")?; // Initialize Tera template engine
     let mut context = Context::new();
-    context.insert("seo_data", &seo_data);
+    context.insert("seo_data", &seo_data); // Insert SEOData into Tera context
 
-    let rendered = tera.render("report.html", &context)?;
-    std::fs::write("seo_report.html", rendered)?;
+    let rendered = tera.render(".report.html", &context)?; // Render HTML using Tera
+    std::fs::write("seo_report.html", rendered)?; // Write rendered HTML to file
 
     println!("SEO report generated: seo_report.html");
     Ok(())

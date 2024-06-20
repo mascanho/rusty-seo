@@ -1442,7 +1442,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rusty-seo-bot"
+name = "rusty-frog"
 version = "0.1.0"
 dependencies = [
  "chrono",

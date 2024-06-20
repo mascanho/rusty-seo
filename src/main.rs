@@ -8,6 +8,7 @@ use std::io::{self, BufWriter, Write};
 use url::Url;
 
 mod crawlers;
+mod libs;
 mod reports;
 
 fn crawl_all() -> Result<(), Box<dyn Error>> {
