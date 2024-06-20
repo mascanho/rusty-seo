@@ -1,13 +1,16 @@
 use chrono::Utc;
 use reqwest::blocking::Client;
+use reqwest::header::USER_AGENT;
 use reqwest::Url;
 use scraper::{Html, Selector};
+use serde_json::Value;
 use std::error::Error;
 use std::fs::File;
 use std::io::{self, BufWriter, Write};
 use url::ParseError;
 
-fn user_input() -> Result<String, Box<dyn Error>> {
+// Prompt the user for URL
+pub fn user_input() -> Result<String, Box<dyn Error>> {
     println!("Please enter the URL of the website to analyze (e.g., https://example.com): ");
     io::stdout().flush()?; // Ensure the prompt is displayed immediately
 
@@ -21,6 +24,47 @@ fn user_input() -> Result<String, Box<dyn Error>> {
     Url::parse(&url)?;
 
     Ok(url)
+}
+
+pub fn structured_data() -> Result<(), Box<dyn Error>> {
+    // Get user input for URL
+    let url = user_input()?;
+
+    // Fetch HTML content
+    let client = Client::new();
+    let response = client
+        .get(&url)
+        .header(USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+        .send()?;
+
+    if !response.status().is_success() {
+        return Err(format!("Failed to fetch URL: {}", response.status()).into());
+    }
+
+    let html = response.text()?;
+    let document = Html::parse_document(&html);
+
+    // Check for structured data (json-ld)
+    let json_ld_selector = Selector::parse("script[type='application/ld+json']")
+        .map_err(|e| format!("Failed to parse selector: {:?}", e))?;
+
+    if let Some(script) = document.select(&json_ld_selector).next() {
+        let json_ld_content = script.inner_html();
+        // Parse the JSON content
+        match serde_json::from_str::<Value>(&json_ld_content) {
+            Ok(parsed_json) => {
+                // Print the parsed JSON in a pretty, human-readable format
+                println!("{}", serde_json::to_string_pretty(&parsed_json)?);
+            }
+            Err(e) => {
+                return Err(format!("Failed to parse JSON-LD script: {:?}", e).into());
+            }
+        }
+    } else {
+        println!("No structured data found in JSON-LD script");
+    }
+
+    Ok(())
 }
 
 pub fn content_quality() -> Result<(), Box<dyn Error>> {
@@ -124,7 +168,7 @@ pub fn crawl_page() -> Result<(), Box<dyn Error>> {
 
 pub fn generate_sitemaps() -> Result<(), Box<dyn Error>> {
     // Ask the user for the website URL
-    let url_input = ask_for_url()?;
+    let url_input = ask_for_url().expect("It needs user input...");
 
     // Ensure the URL ends with a slash for proper crawling logic
     let url_input = if url_input.ends_with('/') {

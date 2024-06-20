@@ -1,3 +1,4 @@
+use reports::generate_full_report;
 use reqwest::blocking::Client;
 use scraper::{Html, Selector};
 use std::collections::{HashSet, VecDeque};
@@ -7,6 +8,7 @@ use std::io::{self, BufWriter, Write};
 use url::Url;
 
 mod crawlers;
+mod reports;
 
 fn crawl_all() -> Result<(), Box<dyn Error>> {
     // Prompt the user for the URL
@@ -118,7 +120,8 @@ fn crawl_all() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
     // Print asci art
     println!(
         r#"
@@ -172,6 +175,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("3. Crawl a page and get its Headings");
     println!("4. Crawl a website and generate a sitemap");
     println!("5. Content Quality");
+    println!("6. Check Structured Data");
+    println!("7. Generate Full report");
 
     // Read the user's choice
     let mut choice = String::new();
@@ -206,6 +211,16 @@ fn main() -> Result<(), Box<dyn Error>> {
         5 => {
             // Content Quality
             crawlers::content_quality().expect("Failed to get content quality");
+        }
+        6 => {
+            // Structured Data
+            crawlers::structured_data().expect("Failed to get structured data");
+        }
+        7 => {
+            // Generate Full report
+            reports::generate_full_report()
+                .await
+                .expect("Failed to generate full report");
         }
         _ => {
             println!("Invalid choice. Exiting...");
