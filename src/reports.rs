@@ -45,6 +45,8 @@ async fn fetch_html(url: &str) -> Result<String, Box<dyn Error>> {
     Ok(response.text().await?) // Return the HTML content as a string
 }
 
+// function to analyse flesch reading ease from website
+
 // Function to analyze SEO metrics from HTML
 fn analyze_seo(html: &str) -> SEOData {
     let document = Html::parse_document(html);
@@ -104,7 +106,7 @@ fn analyze_seo(html: &str) -> SEOData {
 
     // exctract the structured data inside the json-ld and make it pretty and parse it in the html
     // template
-    let mut json_ld = document
+    let json_ld = document
         .select(&Selector::parse("script[type='application/ld+json']").unwrap())
         .next()
         .and_then(|elem| {
@@ -114,6 +116,15 @@ fn analyze_seo(html: &str) -> SEOData {
                 .ok()
         })
         .unwrap_or(serde_json::Value::Null);
+
+    // Extract the copy from the website and evaluate its flesch score
+
+    let copy = document
+        .select(&Selector::parse("p, h1, h2,h3,h4,h5,h6, span").unwrap())
+        .map(|elem| elem.text().collect::<String>())
+        .collect::<Vec<String>>()
+        .join(" ");
+    let flesch_score = flesch::flesch_reading_ease(&copy);
 
     // Initialize SEOData struct
     SEOData {
