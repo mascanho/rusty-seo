@@ -18,6 +18,7 @@ fn user_input() -> Result<String, Box<dyn Error>> {
 
 #[derive(Serialize)]
 struct SEOData {
+    url: String,
     title: Option<String>,
     meta_description: Option<String>,
     meta_keywords: Option<String>, // Change to Option<String> to handle optional meta keywords
@@ -47,6 +48,12 @@ async fn fetch_html(url: &str) -> Result<String, Box<dyn Error>> {
 fn analyze_seo(html: &str) -> SEOData {
     let document = Html::parse_document(html);
 
+    // extract page url
+    let url = document
+        .select(&Selector::parse("base").unwrap())
+        .next()
+        .and_then(|elem| elem.value().attr("href").map(String::from))
+        .unwrap_or_else(|| "Unknown".to_string());
     // Extract title
     let title = document
         .select(&Selector::parse("title").unwrap())
@@ -96,6 +103,7 @@ fn analyze_seo(html: &str) -> SEOData {
 
     // Initialize SEOData struct
     SEOData {
+        url,
         title,
         meta_description,
         meta_keywords,
@@ -115,11 +123,11 @@ pub async fn generate_full_report() -> Result<(), Box<dyn Error>> {
     let html = fetch_html(&url).await?; // Fetch HTML content from the provided URL
     let seo_data = analyze_seo(&html); // Analyze SEO metrics from the fetched HTML
 
-    let tera = Tera::new("*.html")?; // Initialize Tera template engine
+    let tera = Tera::new("./rustyseo/**/*")?; // Initialize Tera template engine
     let mut context = Context::new();
     context.insert("seo_data", &seo_data); // Insert SEOData into Tera context
 
-    let rendered = tera.render(".report.html", &context)?; // Render HTML using Tera
+    let rendered = tera.render("report.html", &context)?; // Render HTML using Tera
     std::fs::write("seo_report.html", rendered)?; // Write rendered HTML to file
 
     println!("SEO report generated: seo_report.html");
