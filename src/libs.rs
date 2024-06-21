@@ -174,7 +174,7 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
       <img src="screaming-frog-logo.png" alt="Screaming Frog Logo" />
     </div>
     <h1>SEO Report for {{ seo_data.title | default(value="Untitled") }}</h1>
-    <span>Crawl:</span> <span>{{ seo_data.url }}</span>
+    <span>{{ seo_data.url }}</span>
   </header>
 
   <main>
@@ -246,7 +246,12 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
         </ul>
       </div>
     </div>
-  </main>
+   <div class="section">
+      <h2>Structured Data <span>▶️</span></h2>
+      <div class="content">
+        <pre><code>{{ seo_data.json_ld | json_encode | safe  }}</code></pre>
+      </div>
+    </div></main>
 
   <footer>
     <div class="footer-content">

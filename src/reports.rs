@@ -18,7 +18,7 @@ fn user_input() -> Result<String, Box<dyn Error>> {
 
 #[derive(Serialize)]
 struct SEOData {
-    url: String,
+    url: Option<String>,
     title: Option<String>,
     meta_description: Option<String>,
     meta_keywords: Option<String>, // Change to Option<String> to handle optional meta keywords
@@ -26,6 +26,7 @@ struct SEOData {
     image_alt_texts: Vec<String>,
     internal_links: Vec<String>,
     external_links: Vec<String>,
+    json_ld: serde_json::Value,
 }
 
 // Function to fetch HTML content from a URL
@@ -48,12 +49,12 @@ async fn fetch_html(url: &str) -> Result<String, Box<dyn Error>> {
 fn analyze_seo(html: &str) -> SEOData {
     let document = Html::parse_document(html);
 
-    // extract page url
+    // display the url being crawled
     let url = document
-        .select(&Selector::parse("base").unwrap())
+        .select(&Selector::parse("meta[property='og:url']").unwrap())
         .next()
-        .and_then(|elem| elem.value().attr("href").map(String::from))
-        .unwrap_or_else(|| "Unknown".to_string());
+        .and_then(|elem| elem.value().attr("content").map(String::from));
+
     // Extract title
     let title = document
         .select(&Selector::parse("title").unwrap())
@@ -101,8 +102,22 @@ fn analyze_seo(html: &str) -> SEOData {
         .map(|link| link.value().attr("href").unwrap_or("").to_string())
         .partition(|link| link.starts_with('/'));
 
+    // exctract the structured data inside the json-ld and make it pretty and parse it in the html
+    // template
+    let mut json_ld = document
+        .select(&Selector::parse("script[type='application/ld+json']").unwrap())
+        .next()
+        .and_then(|elem| {
+            elem.text()
+                .collect::<String>()
+                .parse::<serde_json::Value>()
+                .ok()
+        })
+        .unwrap_or(serde_json::Value::Null);
+
     // Initialize SEOData struct
     SEOData {
+        json_ld,
         url,
         title,
         meta_description,
