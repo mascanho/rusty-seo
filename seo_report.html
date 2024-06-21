@@ -112,6 +112,20 @@
       line-height: 1.4;
     }
 
+  pre, code {
+      background: #f4f4f4; /* Light gray background */
+      padding: 10px;
+      border-radius: 5px;
+      font-family: 'Courier New', Courier, monospace;
+      overflow-x: auto;
+      white-space: pre-wrap; /* CSS3 */
+      white-space: -moz-pre-wrap; /* Firefox */
+      white-space: -pre-wrap; /* Opera <7 */
+      white-space: -o-pre-wrap; /* Opera 7 */
+      word-wrap: break-word; /* IE */
+      line-height: 1.9em; /* Set line height for code */
+    }
+
     footer {
       background: linear-gradient(135deg, #AD3425, #8B281F); /* Adjusted Rust gradient for footer */
       color: #FFFFFF; /* White text color */
@@ -144,6 +158,11 @@
       color: #ff4136; /* Red heart color */
     }
   </style>
+  <script>
+<!-- Prism.js for syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-json.min.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       var headers = document.querySelectorAll(".section h2");
@@ -505,12 +524,13 @@
         </ul>
       </div>
     </div>
-   <div class="section">
+ <div class="section">
       <h2>Structured Data <span>▶️</span></h2>
       <div class="content">
-        <pre><code>{"@context":"https://schema.org","@graph":[{"@id":"https://www.slimstock.com/blog/how-to-solve-wastage-problems/breadcrumb","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":{"@id":"https://www.slimstock.com","name":"Home"},"position":1},{"@type":"ListItem","item":{"@id":"https://www.slimstock.com/./blog/","name":"Blog"},"position":2},{"@type":"ListItem","item":{"@id":"https://www.slimstock.com/blog/how-to-solve-wastage-problems/","name":"How to Solve Your Wastage Problems"},"position":3}]}]}</code></pre>
+        <pre><code class="language-json">{"@context":"https://schema.org","@graph":[{"@id":"https://www.slimstock.com/blog/how-to-solve-wastage-problems/breadcrumb","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":{"@id":"https://www.slimstock.com","name":"Home"},"position":1},{"@type":"ListItem","item":{"@id":"https://www.slimstock.com/./blog/","name":"Blog"},"position":2},{"@type":"ListItem","item":{"@id":"https://www.slimstock.com/blog/how-to-solve-wastage-problems/","name":"How to Solve Your Wastage Problems"},"position":3}]}]}</code></pre>
       </div>
-    </div></main>
+    </div>
+  </main>
 
   <footer>
     <div class="footer-content">

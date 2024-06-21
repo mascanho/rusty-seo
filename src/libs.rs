@@ -118,6 +118,20 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
       line-height: 1.4;
     }
 
+  pre, code {
+      background: #f4f4f4; /* Light gray background */
+      padding: 10px;
+      border-radius: 5px;
+      font-family: 'Courier New', Courier, monospace;
+      overflow-x: auto;
+      white-space: pre-wrap; /* CSS3 */
+      white-space: -moz-pre-wrap; /* Firefox */
+      white-space: -pre-wrap; /* Opera <7 */
+      white-space: -o-pre-wrap; /* Opera 7 */
+      word-wrap: break-word; /* IE */
+      line-height: 1.9em; /* Set line height for code */
+    }
+
     footer {
       background: linear-gradient(135deg, #AD3425, #8B281F); /* Adjusted Rust gradient for footer */
       color: #FFFFFF; /* White text color */
@@ -150,6 +164,11 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
       color: #ff4136; /* Red heart color */
     }
   </style>
+  <script>
+<!-- Prism.js for syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-json.min.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       var headers = document.querySelectorAll(".section h2");
@@ -246,12 +265,13 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
         </ul>
       </div>
     </div>
-   <div class="section">
+ <div class="section">
       <h2>Structured Data <span>▶️</span></h2>
       <div class="content">
-        <pre><code>{{ seo_data.json_ld | json_encode | safe  }}</code></pre>
+        <pre><code class="language-json">{{ seo_data.json_ld | json_encode(indent=4) | safe }}</code></pre>
       </div>
-    </div></main>
+    </div>
+  </main>
 
   <footer>
     <div class="footer-content">
@@ -264,7 +284,7 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
 
 "#;
 
-    // check if exists and create directory .rustyseo
+    // Check if exists and create directory .rustyseo
     if !Path::new("./rustyseo").exists() {
         fs::create_dir("./rustyseo")?;
     }
