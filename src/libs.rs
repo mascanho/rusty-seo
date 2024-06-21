@@ -63,6 +63,7 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
       flex-direction: column;
       align-items: center; /* Center sections horizontally */
       padding: 20px;
+      margin-top: 2.5em;
     }
 
     .section {
@@ -74,6 +75,27 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
       margin-bottom: 20px;
       overflow: hidden; /* Ensure rounded corners clip shadow */
     }
+
+
+.section ul {
+  list-style-type: none; /* Remove default list styles */
+  padding: 0;
+}
+
+.section ul li {
+  margin-bottom: 8px;
+  line-height: 1.4;
+  display: flex; /* Use flexbox for alignment */
+  align-items: center; /* Center items vertically */
+}
+
+.section ul li::before {
+  content: "•"; /* Bullet point character */
+  color: #CE412B; /* Match the section header color */
+  font-size: 1.2em;
+  margin-right: 0.5em; /* Adjust spacing between bullet and text */
+  margin-left: 0.5em;
+}
 
     .section h2 {
       background: linear-gradient(135deg, #CE412B, #AD3425); /* Rust gradient for section headers */
