@@ -9,7 +9,7 @@ use crate::reports::utils;
 
 #[derive(Deserialize, Debug)]
 struct LighthouseResult {
-    categories: Categories,
+    categories: Option<Categories>,
     audits: Option<Audits>,
     performance_score: Option<f64>,
     dom_size: Option<ScoreMetric>,
@@ -26,7 +26,12 @@ struct Categories {
 
 #[derive(Default, Deserialize, Debug)]
 struct ScoreMetric {
-    score: f64,
+    score: Option<f64>,
+    display_value: Option<String>,
+    numeric_value: Option<f64>,
+    id: String,
+    title: String,
+    description: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -88,6 +93,7 @@ struct Audits {
 struct PageSpeedResponse {
     #[serde(rename = "lighthouseResult")]
     lighthouse_result: LighthouseResult,
+    categories: Option<Categories>,
 }
 
 #[derive(Debug)]
@@ -280,6 +286,23 @@ pub async fn fetch_page_speed(url: &str) -> Result<Vec<AuditInfo>, ReqwestError>
         }
     }
 
+    // Access and print performance information
+    if let Some(categories) = &page_speed_response.lighthouse_result.categories {
+        if let Some(performance) = &categories.performance {
+            println!("Performance Audit:");
+            println!("  ID: {}", performance.id);
+            println!("  Title: {}", performance.title);
+            if let Some(description) = &performance.description {
+                println!("  Description: {}", description);
+            }
+            if let Some(display_value) = &performance.display_value {
+                println!("  Display Value: {}", display_value);
+            }
+            if let Some(score) = &performance.score {
+                println!("  Score: {}", score);
+            }
+        }
+    }
     // Push all the audit details into the audit_info vector
     // Access and collect audit information
     if let Some(audits) = &page_speed_response.lighthouse_result.audits {
