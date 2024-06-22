@@ -126,6 +126,11 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
       display: none;
     }
 
+    .content h4 {
+    margin-top: 10px;
+    color: gray;
+    }
+
     .open > .content {
       display: block;
     }
@@ -227,6 +232,15 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
     </div>
 
     <div class="section">
+      <h2>Flesch Score <span>▶️</span></h2>
+      <div class="content">
+        <h3>{{ seo_data.flesch_score }}</h3> 
+        <h4> {{ seo_data.classification }} </h4>
+      </div>
+    </div>
+ 
+
+ <div class="section">
       <h2>Headings <span>▶️</span></h2>
       <div class="content">
         {% for tag, texts in seo_data.headings %}

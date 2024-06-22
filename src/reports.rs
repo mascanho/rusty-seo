@@ -27,6 +27,8 @@ struct SEOData {
     internal_links: Vec<String>,
     external_links: Vec<String>,
     json_ld: serde_json::Value,
+    flesch_score: f64,
+    classification: &'static str,
 }
 
 // Function to fetch HTML content from a URL
@@ -119,15 +121,81 @@ fn analyze_seo(html: &str) -> SEOData {
 
     // Extract the copy from the website and evaluate its flesch score
 
-    let copy = document
-        .select(&Selector::parse("p, h1, h2,h3,h4,h5,h6, span").unwrap())
-        .map(|elem| elem.text().collect::<String>())
-        .collect::<Vec<String>>()
-        .join(" ");
-    let flesch_score = flesch::flesch_reading_ease(&copy);
+    // Function to extract textual content from HTML
+    fn extract_text(html: &str) -> String {
+        let fragment = Html::parse_document(html);
+        let selector = Selector::parse("p, h1, h2, h3, h4, h5, h6, span").unwrap();
+
+        fragment
+            .select(&selector)
+            .map(|elem| elem.text().collect::<Vec<_>>().join(" "))
+            .collect::<Vec<_>>()
+            .join(" ")
+    }
+
+    // Function to calculate Flesch score
+    fn flesch_reading_ease(copy: &str) -> f64 {
+        let words = copy.split_whitespace().count() as f64;
+        let sentences = copy
+            .split(|c: char| c == '.' || c == '!' || c == '?')
+            .count() as f64;
+        let syllables = copy
+            .split_whitespace()
+            .map(syllables_in_word)
+            .sum::<usize>() as f64;
+
+        206.835 - 1.015 * (words / sentences) - 84.6 * (syllables / words)
+    }
+
+    // Helper function to estimate syllables in a word (approximation)
+    fn syllables_in_word(word: &str) -> usize {
+        let vowels = "aeiouyAEIOUY";
+        let mut num_syllables = 0;
+        let mut prev_char_vowel = false;
+
+        for c in word.chars() {
+            if vowels.contains(c) && !prev_char_vowel {
+                num_syllables += 1;
+                prev_char_vowel = true;
+            } else if !vowels.contains(c) {
+                prev_char_vowel = false;
+            }
+        }
+
+        if word.ends_with('e') {
+            num_syllables = num_syllables.max(1);
+        }
+
+        num_syllables.max(1) // Ensure at least one syllable per word
+    }
+
+    // Function to classify Flesch score
+    fn classify_flesch_score(score: f64) -> &'static str {
+        if score >= 90.0 {
+            "Very easy to read. Easily understood by an average 11-year-old student."
+        } else if score >= 80.0 {
+            "Easy to read. Conversational English for consumers."
+        } else if score >= 70.0 {
+            "Fairly easy to read."
+        } else if score >= 60.0 {
+            "Plain English. Easily understood by 13- to 15-year-old students."
+        } else if score >= 50.0 {
+            "Fairly difficult to read."
+        } else if score >= 30.0 {
+            "Difficult to read."
+        } else {
+            "Very difficult to read. Best understood by university graduates."
+        }
+    }
+
+    let copy = extract_text(&html);
+    let flesch_score = flesch_reading_ease(&copy);
+    let classification = classify_flesch_score(flesch_score);
 
     // Initialize SEOData struct
     SEOData {
+        classification,
+        flesch_score,
         json_ld,
         url,
         title,
