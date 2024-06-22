@@ -1,3 +1,4 @@
+use core::f64;
 use reqwest::header::USER_AGENT;
 use scraper::{Html, Selector};
 use serde::Serialize;
@@ -6,6 +7,9 @@ use std::io;
 use std::{collections::HashMap, process::Command};
 use tera::{Context, Tera};
 
+const _API_KEY: &str = "AIzaSyCCZu9Qxvkv8H0sCR9YPP7aP6CCQTZHFt8";
+
+// use crate::crawlers::user_input;
 use crate::libs;
 mod utils;
 
@@ -17,7 +21,7 @@ fn user_input() -> Result<String, Box<dyn Error>> {
     Ok(url_input.trim().to_string()) // Trim whitespace and return the URL
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 struct SEOData {
     url: Option<String>,
     title: Option<String>,
@@ -256,10 +260,12 @@ fn open_html_file(file_path: &str) -> Result<(), Box<dyn Error>> {
 
 // Function to generate a full SEO report
 pub async fn generate_full_report() -> Result<(), Box<dyn Error>> {
-    // check for folder and files
-    libs::create_html_file().unwrap();
+    let url = user_input()?.trim().to_string(); // Read user input for URL
 
-    let url = user_input()?; // Read user input for URL
+    utils::pagespeed::fetch_page_speed(&url).await?;
+
+    libs::create_html_file()?; // Check for folder and files and create HTML file
+
     let html = fetch_html(&url).await?; // Fetch HTML content from the provided URL
     let seo_data = analyze_seo(&html); // Analyze SEO metrics from the fetched HTML
 
@@ -268,10 +274,13 @@ pub async fn generate_full_report() -> Result<(), Box<dyn Error>> {
     context.insert("seo_data", &seo_data); // Insert SEOData into Tera context
 
     let rendered = tera.render("report.html", &context)?; // Render HTML using Tera
-    std::fs::write("RustySEO-Report.html", rendered)?; // Write rendered HTML to file
+
+    // Write rendered HTML to file
+    std::fs::write("RustySEO-Report.html", rendered)?;
 
     println!("SEO report generated: {}", "RustySEO-Report.html");
-    utils::pagespeed::say_hello();
+
     open_html_file("RustySEO-Report.html")?; // Open HTML file in default browser
+
     Ok(())
 }

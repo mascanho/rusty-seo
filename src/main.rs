@@ -1,4 +1,3 @@
-use reports::generate_full_report;
 use reqwest::blocking::Client;
 use scraper::{Html, Selector};
 use std::collections::{HashSet, VecDeque};

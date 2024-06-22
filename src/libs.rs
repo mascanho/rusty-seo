@@ -1,6 +1,6 @@
 use std::fs::{self, File};
-use std::io::{self, prelude::*};
-use std::path::{Path, PathBuf};
+use std::io::prelude::*;
+use std::path::Path;
 
 // Function to create an HTML file with the provided HTML template content
 pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
