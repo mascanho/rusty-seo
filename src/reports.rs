@@ -267,6 +267,27 @@ pub async fn generate_full_report() -> Result<(), Box<dyn Error>> {
     utils::loading::loading(message, 6);
     let mut audits_info = utils::pagespeed::fetch_page_speed(&url).await?;
 
+    // iterate over the audits and print the results
+
+    // Accessing each audit information individually
+    for (index, audit) in audits_info.iter().enumerate() {
+        println!("Audit Info {}:", index + 1);
+        println!("  ID: {}", audit.id);
+        println!("  Title: {}", audit.title);
+        if let Some(description) = &audit.description {
+            println!("  Description: {}", description);
+        }
+        if let Some(display_value) = &audit.display_value {
+            println!("  Display Value: {}", display_value);
+        }
+        if let Some(score) = &audit.score {
+            println!("  Score: {}", score);
+        }
+        if let Some(numeric_value) = &audit.numeric_value {
+            println!("  Numeric Value: {}", numeric_value);
+        }
+    }
+
     // show the user a spinning thing while loading
     let message = format!("Generating SEO report...");
     utils::loading::loading(message, 3);
