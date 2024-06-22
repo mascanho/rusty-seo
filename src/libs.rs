@@ -317,12 +317,12 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
 "#;
 
     // Check if exists and create directory .rustyseo
-    if !Path::new("./rustyseo").exists() {
-        fs::create_dir("./rustyseo")?;
+    if !Path::new("./rustyfrog").exists() {
+        fs::create_dir("./rustyfrog")?;
     }
 
     // Specify the path for the HTML file
-    let file_path = "./rustyseo/report.html";
+    let file_path = "./rustyfrog/report.html";
 
     // Create or open the file for writing
     let mut file = File::create(file_path)?;

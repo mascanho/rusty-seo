@@ -116,7 +116,10 @@ fn api_check() -> Result<String, io::Error> {
         }
 
         // Prompt the user for the API key
-        print!("Please enter your API key: ");
+        println!("Please enter your API key: ");
+        println!(
+            "(You can get your API key from https://developers.google.com/speed/docs/insights/v5/get-started)\n"
+        );
         io::stdout().flush()?; // Make sure the prompt is shown before reading input
         let mut api_key = String::new();
         io::stdin().read_line(&mut api_key)?;

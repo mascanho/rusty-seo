@@ -264,8 +264,8 @@ pub async fn generate_full_report() -> Result<(), Box<dyn Error>> {
 
     // Show the user a spinning thing while loading
     let message = format!("");
-    utils::loading::loading(message, 3);
-    utils::pagespeed::fetch_page_speed(&url).await?;
+    utils::loading::loading(message, 6);
+    let mut audits_info = utils::pagespeed::fetch_page_speed(&url).await?;
 
     // show the user a spinning thing while loading
     let message = format!("Generating SEO report...");
@@ -275,7 +275,7 @@ pub async fn generate_full_report() -> Result<(), Box<dyn Error>> {
     let html = fetch_html(&url).await?; // Fetch HTML content from the provided URL
     let seo_data = analyze_seo(&html); // Analyze SEO metrics from the fetched HTML
 
-    let tera = Tera::new("./rustyseo/**/*")?; // Initialize Tera template engine
+    let tera = Tera::new("./rustyfrog/**/*")?; // Initialize Tera template engine
     let mut context = Context::new();
     context.insert("seo_data", &seo_data); // Insert SEOData into Tera context
 
