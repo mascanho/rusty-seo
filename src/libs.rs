@@ -68,6 +68,10 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
       margin: 2.5em 0;
     }
 
+    main a {
+      margin-top: 2em;
+    }
+
     .section {
       background-color: #FFFFFF; /* White background */
       border-radius: 10px;
@@ -303,6 +307,9 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
         <pre><code class="language-json">{{ seo_data.json_ld | json_encode(indent=4) | safe }}</code></pre>
       </div>
     </div>
+
+<a _target="_blank" href="https://pagespeed.web.dev/analysis/https-www-markwarrior-dev/xmeo63l50q?form_factor=mobile">Page Speed Insights</a>
+
   </main>
 
   <footer>
