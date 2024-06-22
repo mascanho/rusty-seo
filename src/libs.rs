@@ -63,7 +63,7 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
       flex-direction: column;
       align-items: center; /* Center sections horizontally */
       padding: 20px;
-      margin-top: 2.5em;
+      margin: 2.5em 0;
     }
 
     .section {

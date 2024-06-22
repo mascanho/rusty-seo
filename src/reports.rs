@@ -24,8 +24,8 @@ struct SEOData {
     meta_keywords: Option<String>, // Change to Option<String> to handle optional meta keywords
     headings: HashMap<String, Vec<String>>,
     image_alt_texts: Vec<String>,
-    internal_links: Vec<String>,
-    external_links: Vec<String>,
+    internal_links: Vec<HashMap<String, String>>,
+    external_links: Vec<HashMap<String, String>>,
     json_ld: serde_json::Value,
     flesch_score: f64,
     classification: &'static str,
@@ -99,12 +99,40 @@ fn analyze_seo(html: &str) -> SEOData {
         .filter_map(|elem| elem.value().attr("alt").map(String::from))
         .collect();
 
-    // Extract internal and external links
+    // Extract internal and external links with additional attributes
     let link_selector = Selector::parse("a").unwrap();
-    let (internal_links, external_links): (Vec<String>, Vec<String>) = document
+    let (internal_links, external_links): (
+        Vec<HashMap<String, String>>,
+        Vec<HashMap<String, String>>,
+    ) = document
         .select(&link_selector)
-        .map(|link| link.value().attr("href").unwrap_or("").to_string())
-        .partition(|link| link.starts_with('/'));
+        .map(|link| {
+            let href = link.value().attr("href").unwrap_or("").to_string();
+            let rel = link.value().attr("rel").unwrap_or("").to_string();
+            let target = link.value().attr("target").unwrap_or("").to_string();
+            let mut link_info = HashMap::new();
+            link_info.insert("href".to_string(), href.clone());
+            link_info.insert(
+                "rel".to_string(),
+                if rel == "nofollow" {
+                    "nofollow".to_string()
+                } else {
+                    "follow".to_string()
+                },
+            );
+            link_info.insert(
+                "target".to_string(),
+                if target == "_blank" {
+                    "_blank".to_string()
+                } else {
+                    "".to_string()
+                },
+            );
+            link_info
+        })
+        .partition(|link_info| {
+            link_info["href"].starts_with('/') || link_info["href"].starts_with('#')
+        });
 
     // exctract the structured data inside the json-ld and make it pretty and parse it in the html
     // template
@@ -222,8 +250,8 @@ pub async fn generate_full_report() -> Result<(), Box<dyn Error>> {
     context.insert("seo_data", &seo_data); // Insert SEOData into Tera context
 
     let rendered = tera.render("report.html", &context)?; // Render HTML using Tera
-    std::fs::write("seo_report.html", rendered)?; // Write rendered HTML to file
+    std::fs::write("RustySEO-Report.html", rendered)?; // Write rendered HTML to file
 
-    println!("SEO report generated: seo_report.html");
+    println!("SEO report generated: {}", "RustySEO-Report.html");
     Ok(())
 }
