@@ -60,6 +60,7 @@ struct Audit {
     score: Option<f64>,
     domains: Option<Vec<String>>,
     dom_size: Option<ScoreMetric>, // Corrected to match JSON structure
+    numeric_value: Option<f64>,    // Added for numeric value if present
 }
 
 #[derive(Deserialize, Debug)]
@@ -72,6 +73,10 @@ struct Audits {
     dom_size: Option<Audit>, // Use Audit instead of AuditDetails if it's a single audit item
     score: Option<Audit>,
     interactive: Option<Audit>, // Assuming interactive audit has similar structure
+    #[serde(rename = "total-blocking-time")]
+    total_blocking_time: Option<Audit>,
+    #[serde(rename = "cumulative-layout-shift")]
+    cumulative_layout_shift: Option<Audit>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -152,7 +157,7 @@ pub async fn fetch_page_speed(url: &str) -> Result<(), ReqwestError> {
             }
         }
 
-        // Access and print Largest Contentful Paint details
+        // Access and print Time To Interactive details
         if let Some(interactive) = &audits.interactive {
             println!("Interactive Audit:");
             println!("  ID: {}", interactive.id);
@@ -168,13 +173,51 @@ pub async fn fetch_page_speed(url: &str) -> Result<(), ReqwestError> {
             }
         }
 
+        // Access and print Largest Contentful Paint details
+        if let Some(largest_contentful_paint) = &audits.largest_contentful_paint {
+            println!("Largest Contentful Paint Audit:");
+            println!("  ID: {}", largest_contentful_paint.id);
+            println!("  Title: {}", largest_contentful_paint.title);
+            if let Some(description) = &largest_contentful_paint.description {
+                println!("  Description: {}", description);
+            }
+            if let Some(display_value) = &largest_contentful_paint.display_value {
+                println!("  Display Value: {}", display_value);
+            }
+            if let Some(score) = &largest_contentful_paint.score {
+                println!("  Score: {}", score);
+            }
+        }
+
         // Access and print dom-size details
         if let Some(dom_size) = &audits.dom_size {
             println!("DOM Size Audit:");
-            if let Some(dom_size_score) = &dom_size.score {
-                println!("  Score: {}", dom_size_score);
-            } else {
-                println!("  Score not available");
+            println!("  ID: {}", dom_size.id);
+            println!("  Title: {}", dom_size.title);
+            if let Some(description) = &dom_size.description {
+                println!("  Description: {}", description);
+            }
+            if let Some(display_value) = &dom_size.display_value {
+                println!("  Display Value: {}", display_value);
+            }
+            if let Some(score) = &dom_size.numeric_value {
+                println!("  Score: {}", score);
+            }
+        }
+
+        // Access Total Blocking Time
+        if let Some(total_blocking_time) = &audits.total_blocking_time {
+            println!("Total Blocking Time Audit:");
+            println!("  ID: {}", total_blocking_time.id);
+            println!("  Title: {}", total_blocking_time.title);
+            if let Some(description) = &total_blocking_time.description {
+                println!("  Description: {}", description);
+            }
+            if let Some(display_value) = &total_blocking_time.display_value {
+                println!("  Display Value: {}", display_value);
+            }
+            if let Some(score) = &total_blocking_time.score {
+                println!("  Score: {}", score);
             }
         }
     }
