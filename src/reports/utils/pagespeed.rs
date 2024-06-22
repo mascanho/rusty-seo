@@ -75,8 +75,6 @@ struct Audits {
     interactive: Option<Audit>, // Assuming interactive audit has similar structure
     #[serde(rename = "total-blocking-time")]
     total_blocking_time: Option<Audit>,
-    #[serde(rename = "cumulative-layout-shift")]
-    cumulative_layout_shift: Option<Audit>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -220,7 +218,7 @@ pub async fn fetch_page_speed(url: &str) -> Result<(), ReqwestError> {
                 println!("  Score: {}", score);
             }
         }
-    }
+    } // Access Cumulative Layout Shift
 
     Ok(())
 }
