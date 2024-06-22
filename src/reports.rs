@@ -1,9 +1,9 @@
 use reqwest::header::USER_AGENT;
 use scraper::{Html, Selector};
 use serde::Serialize;
-use std::collections::HashMap;
 use std::error::Error;
 use std::io;
+use std::{collections::HashMap, process::Command};
 use tera::{Context, Tera};
 
 use crate::libs;
@@ -236,6 +236,23 @@ fn analyze_seo(html: &str) -> SEOData {
     }
 }
 
+// Function to open an HTML file
+fn open_html_file(file_path: &str) -> Result<(), Box<dyn Error>> {
+    if cfg!(target_os = "windows") {
+        Command::new("cmd")
+            .args(&["/C", "start", file_path])
+            .spawn()?;
+    } else if cfg!(target_os = "macos") {
+        Command::new("open").arg(file_path).spawn()?;
+    } else if cfg!(target_os = "linux") {
+        Command::new("xdg-open").arg(file_path).spawn()?;
+    } else {
+        return Err("Unsupported operating system".into());
+    }
+
+    Ok(())
+}
+
 // Function to generate a full SEO report
 pub async fn generate_full_report() -> Result<(), Box<dyn Error>> {
     // check for folder and files
@@ -253,5 +270,7 @@ pub async fn generate_full_report() -> Result<(), Box<dyn Error>> {
     std::fs::write("RustySEO-Report.html", rendered)?; // Write rendered HTML to file
 
     println!("SEO report generated: {}", "RustySEO-Report.html");
+
+    open_html_file("RustySEO-Report.html")?; // Open HTML file in default browser
     Ok(())
 }

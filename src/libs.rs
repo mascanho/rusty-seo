@@ -11,8 +11,7 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=San+Francisco:wght@400;600&display=swap">
   <title>RustyFrog - SEO Report</title>
   <style>
     * {
@@ -22,9 +21,9 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #c4e17f; /* Screaming Frog green background */
-      color: #333; /* Dark text color */
+      font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #F5F5F7; /* Light gray background */
+      color: #1D1D1F; /* Dark text color */
       margin: 0;
       padding: 0;
       display: flex;
@@ -33,73 +32,64 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     header {
-      background: linear-gradient(135deg, #CE412B, #AD3425); /* Rust gradient for header */
-      color: #FFFFFF; /* White text color */
+      background: #FFFFFF; /* White background */
+      color: #1D1D1F; /* Dark text color */
       text-align: center;
       padding: 20px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      z-index: 1; /* Ensure header stays above content */
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      z-index: 1;
     }
 
     .logo img {
       width: 100px; /* Adjust as needed */
     }
 
-    header span {
-      color: #FFFFFF; /* White text color */
-      display: block;
-      margin-top: 5px;
-      font-size: 0.9em;
+    header h1 {
+      font-size: 2em;
+      margin: 10px 0;
+      font-weight: 600;
     }
 
-    header h1 {
-      font-size: 1.8em;
-      margin: 10px 0;
+    header span {
+      color: #6e6e73; /* Light gray text color */
+      display: block;
+      margin-top: 5px;
+      font-size: 1em;
     }
 
     main {
       flex: 1;
       display: flex;
       flex-direction: column;
-      align-items: center; /* Center sections horizontally */
+      align-items: center;
       padding: 20px;
       margin: 2.5em 0;
     }
 
     .section {
       background-color: #FFFFFF; /* White background */
-      border-radius: 8px;
+      border-radius: 10px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       width: 100%;
-      max-width: 600px; /* Limit section width */
+      max-width: 800px; /* Limit section width */
       margin-bottom: 20px;
-      overflow: hidden; /* Ensure rounded corners clip shadow */
+      overflow: hidden;
     }
 
+    .section ul {
+      list-style-type: none; /* Remove default list styles */
+      padding: 0;
+      margin: 0;
+    }
 
-.section ul {
-  list-style-type: none; /* Remove default list styles */
-  padding: 0;
-}
-
-.section ul li {
-  margin-bottom: 8px;
-  line-height: 1.4;
-  display: flex; /* Use flexbox for alignment */
-  align-items: center; /* Center items vertically */
-}
-
-.section ul li::before {
-  content: "•"; /* Bullet point character */
-  color: #CE412B; /* Match the section header color */
-  font-size: 1.2em;
-  margin-right: 0.5em; /* Adjust spacing between bullet and text */
-  margin-left: 0.5em;
-}
+    .section ul li {
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
 
     .section h2 {
-      background: linear-gradient(135deg, #CE412B, #AD3425); /* Rust gradient for section headers */
-      color: #FFFFFF; /* White text color */
+      background: #F5F5F7; /* Light gray background */
+      color: #1D1D1F; /* Dark text color */
       font-size: 1.5em;
       padding: 15px;
       margin: 0;
@@ -108,17 +98,13 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
-      font-weight: 700; /* Bold font weight */
-    }
-
-    .section h2 span {
-      font-size: 1.2em;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      font-weight: 600; /* Bold font weight */
     }
 
     .section h2:hover {
-      background: linear-gradient(135deg, #AD3425, #8B281F); /* Darker Rust gradient on hover */
+      background: #e5e5e7; /* Slightly darker gray on hover */
     }
 
     .content {
@@ -126,55 +112,47 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
       display: none;
     }
 
+    .content h3 {
+      margin: 10px 0;
+      color: #1D1D1F; /* Dark text color */
+    }
+
     .content h4 {
-    margin-top: 10px;
-    color: gray;
+      margin: 10px 0;
+      color: #6e6e73; /* Light gray text color */
     }
 
     .open > .content {
       display: block;
     }
 
-    .section ul {
-      list-style-type: none; /* Remove default list styles */
-      padding: 0;
-    }
-
-    .section ul li {
-      margin-bottom: 8px;
-      line-height: 1.4;
-    }
-
-  pre, code {
-      background: #f4f4f4; /* Light gray background */
+    pre, code {
+      background: #F5F5F7; /* Light gray background */
       padding: 10px;
       border-radius: 5px;
       font-family: 'Courier New', Courier, monospace;
       overflow-x: auto;
-      white-space: pre-wrap; /* CSS3 */
-      white-space: -moz-pre-wrap; /* Firefox */
-      white-space: -pre-wrap; /* Opera <7 */
-      white-space: -o-pre-wrap; /* Opera 7 */
-      word-wrap: break-word; /* IE */
-      line-height: 1.9em; /* Set line height for code */
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      line-height: 1.6em; /* Set line height for code */
     }
 
     footer {
-      background: linear-gradient(135deg, #AD3425, #8B281F); /* Adjusted Rust gradient for footer */
-      color: #FFFFFF; /* White text color */
+      background: #FFFFFF; /* White background */
+      color: #6e6e73; /* Light gray text color */
       text-align: center;
       padding: 20px;
       width: 100%;
-      box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Drop shadow at the top */
-      z-index: 1; /* Ensure footer stays above content */
+      box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1); /* Drop shadow at the top */
+      z-index: 1;
       margin-top: auto; /* Push footer to bottom */
-      font-size: 0.9em; /* Smaller font size */
+      font-size: 1em; /* Regular font size */
     }
 
     footer a {
-      color: #FFFFFF; /* White text color */
+      color: #0070C9; /* Apple blue link color */
       text-decoration: none;
-      font-weight: 700; /* Bold font weight */
+      font-weight: 600; /* Bold font weight */
     }
 
     .footer-content {
@@ -191,11 +169,6 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
       color: #ff4136; /* Red heart color */
     }
   </style>
-  <script>
-<!-- Prism.js for syntax highlighting -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-json.min.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       var headers = document.querySelectorAll(".section h2");
@@ -235,12 +208,11 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
       <h2>Flesch Score <span>▶️</span></h2>
       <div class="content">
         <h3>{{ seo_data.flesch_score }}</h3> 
-        <h4> {{ seo_data.classification }} </h4>
+        <h4>{{ seo_data.classification }}</h4>
       </div>
     </div>
- 
 
- <div class="section">
+    <div class="section">
       <h2>Headings <span>▶️</span></h2>
       <div class="content">
         {% for tag, texts in seo_data.headings %}
@@ -285,7 +257,11 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
       <div class="content">
         <ul>
           {% for link in seo_data.internal_links %}
-          <li><a href="{{ link }}">{{ link }}</a></li>
+          <li>
+            <a href="{{ link.href }}" 
+               rel="{{ link.rel }}" 
+               target="{{ link.target }}">{{ link.href }}</a>
+          </li>
           {% endfor %}
         </ul>
       </div>
@@ -296,12 +272,17 @@ pub fn create_html_file() -> Result<(), Box<dyn std::error::Error>> {
       <div class="content">
         <ul>
           {% for link in seo_data.external_links %}
-          <li><a href="{{ link }}">{{ link }}</a></li>
+          <li>
+            <a href="{{ link.href }}" 
+               rel="{{ link.rel }}" 
+               target="{{ link.target }}">{{ link.href }}</a>
+          </li>
           {% endfor %}
         </ul>
       </div>
     </div>
- <div class="section">
+
+    <div class="section">
       <h2>Structured Data <span>▶️</span></h2>
       <div class="content">
         <pre><code class="language-json">{{ seo_data.json_ld | json_encode(indent=4) | safe }}</code></pre>

@@ -5,8 +5,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=San+Francisco:wght@400;600&display=swap">
   <title>RustyFrog - SEO Report</title>
   <style>
     * {
@@ -16,9 +15,9 @@
     }
 
     body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #c4e17f; /* Screaming Frog green background */
-      color: #333; /* Dark text color */
+      font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #F5F5F7; /* Light gray background */
+      color: #1D1D1F; /* Dark text color */
       margin: 0;
       padding: 0;
       display: flex;
@@ -27,73 +26,64 @@
     }
 
     header {
-      background: linear-gradient(135deg, #CE412B, #AD3425); /* Rust gradient for header */
-      color: #FFFFFF; /* White text color */
+      background: #FFFFFF; /* White background */
+      color: #1D1D1F; /* Dark text color */
       text-align: center;
       padding: 20px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      z-index: 1; /* Ensure header stays above content */
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      z-index: 1;
     }
 
     .logo img {
       width: 100px; /* Adjust as needed */
     }
 
-    header span {
-      color: #FFFFFF; /* White text color */
-      display: block;
-      margin-top: 5px;
-      font-size: 0.9em;
+    header h1 {
+      font-size: 2em;
+      margin: 10px 0;
+      font-weight: 600;
     }
 
-    header h1 {
-      font-size: 1.8em;
-      margin: 10px 0;
+    header span {
+      color: #6e6e73; /* Light gray text color */
+      display: block;
+      margin-top: 5px;
+      font-size: 1em;
     }
 
     main {
       flex: 1;
       display: flex;
       flex-direction: column;
-      align-items: center; /* Center sections horizontally */
+      align-items: center;
       padding: 20px;
       margin: 2.5em 0;
     }
 
     .section {
       background-color: #FFFFFF; /* White background */
-      border-radius: 8px;
+      border-radius: 10px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       width: 100%;
-      max-width: 600px; /* Limit section width */
+      max-width: 800px; /* Limit section width */
       margin-bottom: 20px;
-      overflow: hidden; /* Ensure rounded corners clip shadow */
+      overflow: hidden;
     }
 
+    .section ul {
+      list-style-type: none; /* Remove default list styles */
+      padding: 0;
+      margin: 0;
+    }
 
-.section ul {
-  list-style-type: none; /* Remove default list styles */
-  padding: 0;
-}
-
-.section ul li {
-  margin-bottom: 8px;
-  line-height: 1.4;
-  display: flex; /* Use flexbox for alignment */
-  align-items: center; /* Center items vertically */
-}
-
-.section ul li::before {
-  content: "•"; /* Bullet point character */
-  color: #CE412B; /* Match the section header color */
-  font-size: 1.2em;
-  margin-right: 0.5em; /* Adjust spacing between bullet and text */
-  margin-left: 0.5em;
-}
+    .section ul li {
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
 
     .section h2 {
-      background: linear-gradient(135deg, #CE412B, #AD3425); /* Rust gradient for section headers */
-      color: #FFFFFF; /* White text color */
+      background: #F5F5F7; /* Light gray background */
+      color: #1D1D1F; /* Dark text color */
       font-size: 1.5em;
       padding: 15px;
       margin: 0;
@@ -102,17 +92,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
-      font-weight: 700; /* Bold font weight */
-    }
-
-    .section h2 span {
-      font-size: 1.2em;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      font-weight: 600; /* Bold font weight */
     }
 
     .section h2:hover {
-      background: linear-gradient(135deg, #AD3425, #8B281F); /* Darker Rust gradient on hover */
+      background: #e5e5e7; /* Slightly darker gray on hover */
     }
 
     .content {
@@ -120,55 +106,47 @@
       display: none;
     }
 
+    .content h3 {
+      margin: 10px 0;
+      color: #1D1D1F; /* Dark text color */
+    }
+
     .content h4 {
-    margin-top: 10px;
-    color: gray;
+      margin: 10px 0;
+      color: #6e6e73; /* Light gray text color */
     }
 
     .open > .content {
       display: block;
     }
 
-    .section ul {
-      list-style-type: none; /* Remove default list styles */
-      padding: 0;
-    }
-
-    .section ul li {
-      margin-bottom: 8px;
-      line-height: 1.4;
-    }
-
-  pre, code {
-      background: #f4f4f4; /* Light gray background */
+    pre, code {
+      background: #F5F5F7; /* Light gray background */
       padding: 10px;
       border-radius: 5px;
       font-family: 'Courier New', Courier, monospace;
       overflow-x: auto;
-      white-space: pre-wrap; /* CSS3 */
-      white-space: -moz-pre-wrap; /* Firefox */
-      white-space: -pre-wrap; /* Opera <7 */
-      white-space: -o-pre-wrap; /* Opera 7 */
-      word-wrap: break-word; /* IE */
-      line-height: 1.9em; /* Set line height for code */
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      line-height: 1.6em; /* Set line height for code */
     }
 
     footer {
-      background: linear-gradient(135deg, #AD3425, #8B281F); /* Adjusted Rust gradient for footer */
-      color: #FFFFFF; /* White text color */
+      background: #FFFFFF; /* White background */
+      color: #6e6e73; /* Light gray text color */
       text-align: center;
       padding: 20px;
       width: 100%;
-      box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Drop shadow at the top */
-      z-index: 1; /* Ensure footer stays above content */
+      box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1); /* Drop shadow at the top */
+      z-index: 1;
       margin-top: auto; /* Push footer to bottom */
-      font-size: 0.9em; /* Smaller font size */
+      font-size: 1em; /* Regular font size */
     }
 
     footer a {
-      color: #FFFFFF; /* White text color */
+      color: #0070C9; /* Apple blue link color */
       text-decoration: none;
-      font-weight: 700; /* Bold font weight */
+      font-weight: 600; /* Bold font weight */
     }
 
     .footer-content {
@@ -185,11 +163,6 @@
       color: #ff4136; /* Red heart color */
     }
   </style>
-  <script>
-<!-- Prism.js for syntax highlighting -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-json.min.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       var headers = document.querySelectorAll(".section h2");
@@ -213,102 +186,70 @@
     <div class="logo">
       <img src="screaming-frog-logo.png" alt="Screaming Frog Logo" />
     </div>
-    <h1>SEO Report for Inventory Management Blog – Slimstock</h1>
-    <span>https:&#x2F;&#x2F;www.slimstock.com&#x2F;blog&#x2F;</span>
+    <h1>SEO Report for Mark  Warrior</h1>
+    <span>https:&#x2F;&#x2F;markwarrior.dev</span>
   </header>
 
   <main>
     <div class="section">
       <h2>Meta Description <span>▶️</span></h2>
       <div class="content">
-        <p>Slimstock’s inventory management blog offers the latest supply chain insights from industry leaders &amp; field experts</p>
+        <p>Read my thoughts on software development, design, and more.</p>
       </div>
     </div>
 
     <div class="section">
       <h2>Flesch Score <span>▶️</span></h2>
       <div class="content">
-        <h3>23.03237556561089</h3> 
-        <h4> Very difficult to read. Best understood by university graduates. </h4>
+        <h3>47.59506409289702</h3> 
+        <h4>Difficult to read.</h4>
       </div>
     </div>
- 
 
- <div class="section">
+    <div class="section">
       <h2>Headings <span>▶️</span></h2>
       <div class="content">
         
         <h3>H1</h3>
         <ul>
           
-          <li>Slimstock blog</li>
+          <li>_</li>
           
         </ul>
         
         <h3>H2</h3>
         <ul>
           
-          <li>Supply Chain Management: How To Build a More Resilient Operation?</li>
+          <li>Latest Blogs</li>
           
         </ul>
         
         <h3>H3</h3>
         <ul>
           
-          <li>How to Solve Your Wastage Problems</li>
+          <li>Analyzing Web Pages and Improving SEO with Python</li>
           
-          <li>How to Overcome Forecasting Difficulties in the Fashion and Textile Industry</li>
+          <li>Neovim Plugins - Enhancing Your Neovim Editor with Awesome Plugins</li>
           
-          <li>Days Inventory Outstanding (DIO): A critical link between operational and financial efficiency</li>
+          <li>How To Set Up Your Unix Terminal For Development</li>
           
-          <li>Service Level and Its Impact on Inventory Management</li>
+          <li>How SEO Optimisation Can Positively Affect Your Brand Awareness and Brand Equity</li>
           
-          <li>Exclusive interview: “People, processes and technology, have to work in harmony to deliver supply chain success”</li>
-          
-          <li>Demand Planner 2.0</li>
-          
-          <li>Stockouts – What Are They and How Can You Prevent Them?</li>
-          
-          <li>Profitable Category Management In Retail</li>
-          
-          <li>Transform your S&amp;OP with Machine learning</li>
-          
-          <li>Embrace Business Intelligence for better supply chain decision-making</li>
-          
-          <li>Ask the expert: How can you leverage S&amp;OP to unlock a sustainable competitive advantage?</li>
-          
-          <li>Scenario Planning: An essential piece in the S&amp;OP puzzle</li>
-          
-          <li>6 Tips to Excellence Via Effective Vendor Managed Inventory</li>
-          
-          <li>Time to tackle the supply chain talent crisis</li>
-          
-          <li>Just In Time: an (almost) Stockless approach to inventory planning</li>
-          
-          <li>Schrödinger’s Inventory Paradox</li>
-          
-          <li>Supplier Relationship Management: a guide to better supplier selection, negotiation &amp; performance evaluation</li>
-          
-          <li>Production Planning Q&amp;A: Unlock Efficiency Gains Throughout Your Manufacturing Operation</li>
-          
-          <li>Quantifying the value of S&amp;OP</li>
-          
-          <li>How to Overcome Your Bathroom Supply Chain Challenges</li>
-          
-          <li>How Can You Leverage The Reorder Point to Enhance Supply Chain Efficiency?</li>
-          
-          <li>Disruption on the Red Sea Puts Pressure on Global Supply Chains</li>
-          
-          <li>Pioneering a Waste-Free Supply Chain</li>
-          
-          <li>Lean Logistics: How to Eliminate Waste Throughout your Supply Chain</li>
+          <li>2023 State of Databases for Serverless &amp; Edge</li>
           
         </ul>
         
         <h3>H5</h3>
         <ul>
           
-          <li>Slimstock</li>
+          <li> Efficiency is doing things right; effectiveness is doing the right things.</li>
+          
+        </ul>
+        
+        <h3>H6</h3>
+        <ul>
+          
+          <li>-Peter Drucker</li>
           
         </ul>
         
@@ -319,60 +260,6 @@
       <h2>Image Alt Texts <span>▶️</span></h2>
       <div class="content">
         <ul>
-          
-          <li>slimstock logo</li>
-          
-          <li>Supply Chain Management Cartoon Umbrella</li>
-          
-          <li></li>
-          
-          <li></li>
-          
-          <li></li>
-          
-          <li></li>
-          
-          <li>Feature Image Exclusive Interview</li>
-          
-          <li>Demand Planner Featured Image</li>
-          
-          <li>Stockouts Eatured Image With Sold Out Label</li>
-          
-          <li>Category Management Supermarket Isle Troley</li>
-          
-          <li>Slimstock Machine Learning Expert Daan Majoor</li>
-          
-          <li>Business Intelligence People Pointing At Chart</li>
-          
-          <li>Leverage S&amp;op To Unlock A Sustainable Competitive Advantage Featured Image</li>
-          
-          <li>Scenario Planning Chart</li>
-          
-          <li>Vendor Managed Inventory</li>
-          
-          <li>Supply Chain Talent</li>
-          
-          <li>Just In Time Featured Image</li>
-          
-          <li>Shroedinger&#x27;s Cat</li>
-          
-          <li>Supplier Relationship Management</li>
-          
-          <li>Production Planning Card Overview 1</li>
-          
-          <li>S&amp;op Value</li>
-          
-          <li>Bathroom Supply Chain Challenges</li>
-          
-          <li>Reorder Points Deatured Image</li>
-          
-          <li></li>
-          
-          <li>Waste Free Supply Chain Feature Image</li>
-          
-          <li>Lean Logistics</li>
-          
-          <li>Slimstock - Inventory optimisation</li>
           
         </ul>
       </div>
@@ -392,15 +279,77 @@
       <div class="content">
         <ul>
           
-          <li><a href="[object]">[object]</a></li>
+          <li>
+            <a href="&#x2F;" 
+               rel="follow" 
+               target="">&#x2F;</a>
+          </li>
           
-          <li><a href="[object]">[object]</a></li>
+          <li>
+            <a href="&#x2F;about" 
+               rel="follow" 
+               target="">&#x2F;about</a>
+          </li>
           
-          <li><a href="[object]">[object]</a></li>
+          <li>
+            <a href="&#x2F;projects" 
+               rel="follow" 
+               target="">&#x2F;projects</a>
+          </li>
           
-          <li><a href="[object]">[object]</a></li>
+          <li>
+            <a href="&#x2F;blog" 
+               rel="follow" 
+               target="">&#x2F;blog</a>
+          </li>
           
-          <li><a href="[object]">[object]</a></li>
+          <li>
+            <a href="&#x2F;guestbook" 
+               rel="follow" 
+               target="">&#x2F;guestbook</a>
+          </li>
+          
+          <li>
+            <a href="&#x2F;" 
+               rel="follow" 
+               target="">&#x2F;</a>
+          </li>
+          
+          <li>
+            <a href="&#x2F;blog&#x2F;python-and-seo" 
+               rel="follow" 
+               target="">&#x2F;blog&#x2F;python-and-seo</a>
+          </li>
+          
+          <li>
+            <a href="&#x2F;blog&#x2F;neovim-as-your-ide" 
+               rel="follow" 
+               target="">&#x2F;blog&#x2F;neovim-as-your-ide</a>
+          </li>
+          
+          <li>
+            <a href="&#x2F;blog&#x2F;unix-terminal-setup" 
+               rel="follow" 
+               target="">&#x2F;blog&#x2F;unix-terminal-setup</a>
+          </li>
+          
+          <li>
+            <a href="&#x2F;blog&#x2F;how-seo-impacts-brand-equity" 
+               rel="follow" 
+               target="">&#x2F;blog&#x2F;how-seo-impacts-brand-equity</a>
+          </li>
+          
+          <li>
+            <a href="&#x2F;blog&#x2F;backend" 
+               rel="follow" 
+               target="">&#x2F;blog&#x2F;backend</a>
+          </li>
+          
+          <li>
+            <a href="&#x2F;blog" 
+               rel="follow" 
+               target="">&#x2F;blog</a>
+          </li>
           
         </ul>
       </div>
@@ -411,258 +360,47 @@
       <div class="content">
         <ul>
           
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
-          
-          <li><a href="[object]">[object]</a></li>
+          <li>
+            <a href="https:&#x2F;&#x2F;twitter.com&#x2F;Mascanho" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;twitter.com&#x2F;Mascanho</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;www.instagram.com&#x2F;markisawarrior&#x2F;" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;www.instagram.com&#x2F;markisawarrior&#x2F;</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;marco-guerreiro&#x2F;" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;marco-guerreiro&#x2F;</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;github.com&#x2F;mascanho&#x2F;" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;github.com&#x2F;mascanho&#x2F;</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;behance.com&#x2F;mascanho" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;behance.com&#x2F;mascanho</a>
+          </li>
+          
+          <li>
+            <a href="mailto:mascanho@gmail.com" 
+               rel="follow" 
+               target="">mailto:mascanho@gmail.com</a>
+          </li>
           
         </ul>
       </div>
     </div>
- <div class="section">
+
+    <div class="section">
       <h2>Structured Data <span>▶️</span></h2>
       <div class="content">
         <pre><code class="language-json">null</code></pre>
