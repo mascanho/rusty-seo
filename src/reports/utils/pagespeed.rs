@@ -1,8 +1,14 @@
 use reqwest::Error as ReqwestError;
 use serde::Deserialize;
-use serde_json::{self, Value}; // Import for handling dynamic JSON
+use serde_json::{self, Value};
+use std::fs;
+// Import for handling dynamic JSON
+use std::io::{self, Write};
+use std::path::Path;
 
-const API_KEY: &str = "AIzaSyCCZu9Qxvkv8H0sCR9YPP7aP6CCQTZHFt8";
+use crate::reports::utils;
+
+// const API_KEY: &str = "AIzaSyCCZu9Qxvkv8H0sCR9YPP7aP6CCQTZHFt8";
 
 #[derive(Deserialize, Debug)]
 struct LighthouseResult {
@@ -67,7 +73,49 @@ struct PageSpeedResponse {
     lighthouse_result: LighthouseResult,
 }
 
+// Check if the API KEY ID exists in the .rustyfrog folder
+fn api_check() -> Result<String, std::io::Error> {
+    let dir_path = ".rustyfrog";
+    let file_path = format!("{}/API_KEY.json", dir_path);
+
+    if Path::new(&file_path).exists() {
+        // If the API key file exists, read and return its content
+        let api_key_from_file = fs::read_to_string(&file_path)?;
+        Ok(api_key_from_file)
+    } else {
+        // Create the folder if it doesn't exist
+        if !Path::new(dir_path).exists() {
+            fs::create_dir(dir_path)?;
+        }
+
+        // Prompt the user for the API key
+        print!("Please enter your API key: ");
+        io::stdout().flush()?; // Make sure the prompt is shown before reading input
+        let mut api_key = String::new();
+        io::stdin().read_line(&mut api_key)?;
+        let api_key = api_key.trim(); // Trim whitespace/newline
+
+        // Write the API key to the file
+        fs::write(&file_path, api_key)?;
+
+        // read the api key from the file
+        let api_key = fs::read_to_string(&file_path)?;
+
+        // return the api key
+        let API_KEY: String = api_key;
+
+        println!("API key written to file: {}", API_KEY);
+
+        Ok(API_KEY)
+    }
+}
+
 pub async fn fetch_page_speed(url: &str) -> Result<(), ReqwestError> {
+    let API_KEY = api_check().expect("Failed to read API_KEY");
+
+    let message = format!("Fetching PageSpeed data for: {}", url);
+    utils::loading::loading(message, 3);
+
     let client = reqwest::Client::new();
     let api_url = format!(
         "https://www.googleapis.com/pagespeedonline/v5/runPagespeed?key={}&url={}",
@@ -127,13 +175,7 @@ pub async fn fetch_page_speed(url: &str) -> Result<(), ReqwestError> {
         }
     }
 
-    Ok(())
-}
+    // return the metrics that matter from the function
 
-#[tokio::main]
-async fn main() {
-    let url = "https://example.com"; // Replace with your desired URL
-    if let Err(err) = fetch_page_speed(url).await {
-        eprintln!("Error fetching page speed: {}", err);
-    }
+    Ok(())
 }

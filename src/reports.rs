@@ -262,8 +262,14 @@ fn open_html_file(file_path: &str) -> Result<(), Box<dyn Error>> {
 pub async fn generate_full_report() -> Result<(), Box<dyn Error>> {
     let url = user_input()?.trim().to_string(); // Read user input for URL
 
+    // Show the user a spinning thing while loading
+    let message = format!("");
+    utils::loading::loading(message, 3);
     utils::pagespeed::fetch_page_speed(&url).await?;
 
+    // show the user a spinning thing while loading
+    let message = format!("Generating SEO report...");
+    utils::loading::loading(message, 3);
     libs::create_html_file()?; // Check for folder and files and create HTML file
 
     let html = fetch_html(&url).await?; // Fetch HTML content from the provided URL
