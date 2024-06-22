@@ -35,7 +35,9 @@
     }
 
     .logo img {
-      width: 100px; /* Adjust as needed */
+      width: full; /* Adjust as needed */
+      height: 100px;
+      object-fit: cover;
     }
 
     header h1 {
@@ -70,17 +72,30 @@
       overflow: hidden;
     }
 
-    .section ul {
+.section ul {
       list-style-type: none; /* Remove default list styles */
-      padding: 0;
+      padding-left: 10px; /* Add left padding for custom bullets */
       margin: 0;
     }
 
-    .section ul li {
-      margin-bottom: 8px;
-      line-height: 1.6;
-    }
+.section ul li {
+  position: relative; /* Position relative for pseudo-element */
+  margin-bottom: 8px;
+  line-height: 1.6;
+  padding-left: 20px; /* Space for bullet */
+}
 
+.section ul li::before {
+  content: ""; /* Pseudo-element for custom bullet */
+  position: absolute;
+  left: 0;
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%); /* Correct centering */
+  width: 8px;
+  height: 8px;
+  background-color: #0070C9; /* Apple blue color */
+  border-radius: 50%; /* Circle shape */
+}
     .section h2 {
       background: #F5F5F7; /* Light gray background */
       color: #1D1D1F; /* Dark text color */
@@ -172,9 +187,9 @@
           section.classList.toggle("open");
           var icon = header.querySelector("span");
           if (section.classList.contains("open")) {
-            icon.textContent = "🔽"; // Emoji for open
+            icon.textContent = "▼"; // Down arrow for open
           } else {
-            icon.textContent = "▶️"; // Emoji for closed
+            icon.textContent = "▶"; // Right arrow for closed
           }
         });
       });
@@ -184,7 +199,7 @@
 <body>
   <header>
     <div class="logo">
-      <img src="screaming-frog-logo.png" alt="Screaming Frog Logo" />
+      <img src="https://miro.medium.com/v2/resize:fit:1024/1*k2vgFiXvADxh8woVOmPkSQ.png" alt="Screaming Frog Logo" />
     </div>
     <h1>SEO Report for {{ seo_data.title | default(value="Untitled") }}</h1>
     <span>{{ seo_data.url }}</span>
@@ -192,14 +207,14 @@
 
   <main>
     <div class="section">
-      <h2>Meta Description <span>▶️</span></h2>
+      <h2>Meta Description <span>▶</span></h2>
       <div class="content">
         <p>{{ seo_data.meta_description | default(value="No meta description found") }}</p>
       </div>
     </div>
 
     <div class="section">
-      <h2>Flesch Score <span>▶️</span></h2>
+      <h2>Flesch Score <span>▶</span></h2>
       <div class="content">
         <h3>{{ seo_data.flesch_score }}</h3> 
         <h4>{{ seo_data.classification }}</h4>
@@ -207,7 +222,7 @@
     </div>
 
     <div class="section">
-      <h2>Headings <span>▶️</span></h2>
+      <h2>Headings <span>▶</span></h2>
       <div class="content">
         {% for tag, texts in seo_data.headings %}
         <h3>{{ tag | upper }}</h3>
@@ -221,7 +236,7 @@
     </div>
 
     <div class="section">
-      <h2>Image Alt Texts <span>▶️</span></h2>
+      <h2>Image Alt Texts <span>▶</span></h2>
       <div class="content">
         <ul>
           {% for alt_text in seo_data.image_alt_texts %}
@@ -232,7 +247,7 @@
     </div>
 
     <div class="section">
-      <h2>Meta Keywords <span>▶️</span></h2>
+      <h2>Meta Keywords <span>▶</span></h2>
       <div class="content">
         {% if seo_data.meta_keywords %}
         <ul>
@@ -247,7 +262,7 @@
     </div>
 
     <div class="section">
-      <h2>Relative Links <span>▶️</span></h2>
+      <h2>Relative Links <span>▶</span></h2>
       <div class="content">
         <ul>
           {% for link in seo_data.internal_links %}
@@ -262,7 +277,7 @@
     </div>
 
     <div class="section">
-      <h2>Absolute Links <span>▶️</span></h2>
+      <h2>Absolute Links <span>▶</span></h2>
       <div class="content">
         <ul>
           {% for link in seo_data.external_links %}
@@ -277,7 +292,7 @@
     </div>
 
     <div class="section">
-      <h2>Structured Data <span>▶️</span></h2>
+      <h2>Structured Data <span>▶</span></h2>
       <div class="content">
         <pre><code class="language-json">{{ seo_data.json_ld | json_encode(indent=4) | safe }}</code></pre>
       </div>

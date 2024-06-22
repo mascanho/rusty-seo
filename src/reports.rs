@@ -7,6 +7,7 @@ use std::{collections::HashMap, process::Command};
 use tera::{Context, Tera};
 
 use crate::libs;
+mod utils;
 
 // Function to read user input for URL
 fn user_input() -> Result<String, Box<dyn Error>> {
@@ -270,7 +271,7 @@ pub async fn generate_full_report() -> Result<(), Box<dyn Error>> {
     std::fs::write("RustySEO-Report.html", rendered)?; // Write rendered HTML to file
 
     println!("SEO report generated: {}", "RustySEO-Report.html");
-
+    utils::pagespeed::say_hello();
     open_html_file("RustySEO-Report.html")?; // Open HTML file in default browser
     Ok(())
 }

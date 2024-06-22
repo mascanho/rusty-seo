@@ -35,7 +35,9 @@
     }
 
     .logo img {
-      width: 100px; /* Adjust as needed */
+      width: full; /* Adjust as needed */
+      height: 100px;
+      object-fit: cover;
     }
 
     header h1 {
@@ -70,17 +72,30 @@
       overflow: hidden;
     }
 
-    .section ul {
+.section ul {
       list-style-type: none; /* Remove default list styles */
-      padding: 0;
+      padding-left: 10px; /* Add left padding for custom bullets */
       margin: 0;
     }
 
-    .section ul li {
-      margin-bottom: 8px;
-      line-height: 1.6;
-    }
+.section ul li {
+  position: relative; /* Position relative for pseudo-element */
+  margin-bottom: 8px;
+  line-height: 1.6;
+  padding-left: 20px; /* Space for bullet */
+}
 
+.section ul li::before {
+  content: ""; /* Pseudo-element for custom bullet */
+  position: absolute;
+  left: 0;
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%); /* Correct centering */
+  width: 8px;
+  height: 8px;
+  background-color: #0070C9; /* Apple blue color */
+  border-radius: 50%; /* Circle shape */
+}
     .section h2 {
       background: #F5F5F7; /* Light gray background */
       color: #1D1D1F; /* Dark text color */
@@ -172,9 +187,9 @@
           section.classList.toggle("open");
           var icon = header.querySelector("span");
           if (section.classList.contains("open")) {
-            icon.textContent = "🔽"; // Emoji for open
+            icon.textContent = "▼"; // Down arrow for open
           } else {
-            icon.textContent = "▶️"; // Emoji for closed
+            icon.textContent = "▶"; // Right arrow for closed
           }
         });
       });
@@ -184,72 +199,40 @@
 <body>
   <header>
     <div class="logo">
-      <img src="screaming-frog-logo.png" alt="Screaming Frog Logo" />
+      <img src="https://miro.medium.com/v2/resize:fit:1024/1*k2vgFiXvADxh8woVOmPkSQ.png" alt="Screaming Frog Logo" />
     </div>
-    <h1>SEO Report for Mark  Warrior</h1>
-    <span>https:&#x2F;&#x2F;markwarrior.dev</span>
+    <h1>SEO Report for Silmadeiras - Comércio de Madeiras, LDA</h1>
+    <span></span>
   </header>
 
   <main>
     <div class="section">
-      <h2>Meta Description <span>▶️</span></h2>
+      <h2>Meta Description <span>▶</span></h2>
       <div class="content">
-        <p>Read my thoughts on software development, design, and more.</p>
+        <p>No meta description found</p>
       </div>
     </div>
 
     <div class="section">
-      <h2>Flesch Score <span>▶️</span></h2>
+      <h2>Flesch Score <span>▶</span></h2>
       <div class="content">
-        <h3>47.59506409289702</h3> 
-        <h4>Difficult to read.</h4>
+        <h3>14.112932604735903</h3> 
+        <h4>Very difficult to read. Best understood by university graduates.</h4>
       </div>
     </div>
 
     <div class="section">
-      <h2>Headings <span>▶️</span></h2>
+      <h2>Headings <span>▶</span></h2>
       <div class="content">
-        
-        <h3>H1</h3>
-        <ul>
-          
-          <li>_</li>
-          
-        </ul>
         
         <h3>H2</h3>
         <ul>
           
-          <li>Latest Blogs</li>
+          <li>29 anos de experiência</li>
           
-        </ul>
-        
-        <h3>H3</h3>
-        <ul>
+          <li>Os nossos produtos</li>
           
-          <li>Analyzing Web Pages and Improving SEO with Python</li>
-          
-          <li>Neovim Plugins - Enhancing Your Neovim Editor with Awesome Plugins</li>
-          
-          <li>How To Set Up Your Unix Terminal For Development</li>
-          
-          <li>How SEO Optimisation Can Positively Affect Your Brand Awareness and Brand Equity</li>
-          
-          <li>2023 State of Databases for Serverless &amp; Edge</li>
-          
-        </ul>
-        
-        <h3>H5</h3>
-        <ul>
-          
-          <li> Efficiency is doing things right; effectiveness is doing the right things.</li>
-          
-        </ul>
-        
-        <h3>H6</h3>
-        <ul>
-          
-          <li>-Peter Drucker</li>
+          <li>Links úteis</li>
           
         </ul>
         
@@ -257,16 +240,24 @@
     </div>
 
     <div class="section">
-      <h2>Image Alt Texts <span>▶️</span></h2>
+      <h2>Image Alt Texts <span>▶</span></h2>
       <div class="content">
         <ul>
           
+          <li></li>
+          
+          <li></li>
+          
+          <li></li>
+          
+          <li>Livro de reclamações</li>
+          
         </ul>
       </div>
     </div>
 
     <div class="section">
-      <h2>Meta Keywords <span>▶️</span></h2>
+      <h2>Meta Keywords <span>▶</span></h2>
       <div class="content">
         
         <p>No meta keywords found</p>
@@ -275,80 +266,20 @@
     </div>
 
     <div class="section">
-      <h2>Relative Links <span>▶️</span></h2>
+      <h2>Relative Links <span>▶</span></h2>
       <div class="content">
         <ul>
           
           <li>
-            <a href="&#x2F;" 
+            <a href="#" 
                rel="follow" 
-               target="">&#x2F;</a>
+               target="">#</a>
           </li>
           
           <li>
-            <a href="&#x2F;about" 
+            <a href="#" 
                rel="follow" 
-               target="">&#x2F;about</a>
-          </li>
-          
-          <li>
-            <a href="&#x2F;projects" 
-               rel="follow" 
-               target="">&#x2F;projects</a>
-          </li>
-          
-          <li>
-            <a href="&#x2F;blog" 
-               rel="follow" 
-               target="">&#x2F;blog</a>
-          </li>
-          
-          <li>
-            <a href="&#x2F;guestbook" 
-               rel="follow" 
-               target="">&#x2F;guestbook</a>
-          </li>
-          
-          <li>
-            <a href="&#x2F;" 
-               rel="follow" 
-               target="">&#x2F;</a>
-          </li>
-          
-          <li>
-            <a href="&#x2F;blog&#x2F;python-and-seo" 
-               rel="follow" 
-               target="">&#x2F;blog&#x2F;python-and-seo</a>
-          </li>
-          
-          <li>
-            <a href="&#x2F;blog&#x2F;neovim-as-your-ide" 
-               rel="follow" 
-               target="">&#x2F;blog&#x2F;neovim-as-your-ide</a>
-          </li>
-          
-          <li>
-            <a href="&#x2F;blog&#x2F;unix-terminal-setup" 
-               rel="follow" 
-               target="">&#x2F;blog&#x2F;unix-terminal-setup</a>
-          </li>
-          
-          <li>
-            <a href="&#x2F;blog&#x2F;how-seo-impacts-brand-equity" 
-               rel="follow" 
-               target="">&#x2F;blog&#x2F;how-seo-impacts-brand-equity</a>
-          </li>
-          
-          <li>
-            <a href="&#x2F;blog&#x2F;backend" 
-               rel="follow" 
-               target="">&#x2F;blog&#x2F;backend</a>
-          </li>
-          
-          <li>
-            <a href="&#x2F;blog" 
-               rel="follow" 
-               target="">&#x2F;blog</a>
+               target="">#</a>
           </li>
           
         </ul>
@@ -356,44 +287,188 @@
     </div>
 
     <div class="section">
-      <h2>Absolute Links <span>▶️</span></h2>
+      <h2>Absolute Links <span>▶</span></h2>
       <div class="content">
         <ul>
           
           <li>
-            <a href="https:&#x2F;&#x2F;twitter.com&#x2F;Mascanho" 
+            <a href="tel:282444225" 
                rel="follow" 
-               target="">https:&#x2F;&#x2F;twitter.com&#x2F;Mascanho</a>
+               target="">tel:282444225</a>
           </li>
           
           <li>
-            <a href="https:&#x2F;&#x2F;www.instagram.com&#x2F;markisawarrior&#x2F;" 
+            <a href="mailto:geral@silmadeiras.pt" 
                rel="follow" 
-               target="">https:&#x2F;&#x2F;www.instagram.com&#x2F;markisawarrior&#x2F;</a>
+               target="">mailto:geral@silmadeiras.pt</a>
           </li>
           
           <li>
-            <a href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;marco-guerreiro&#x2F;" 
+            <a href="https:&#x2F;&#x2F;www.facebook.com&#x2F;Silmadeiras-LDA-568184616669155&#x2F;" 
                rel="follow" 
-               target="">https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;marco-guerreiro&#x2F;</a>
+               target="_blank">https:&#x2F;&#x2F;www.facebook.com&#x2F;Silmadeiras-LDA-568184616669155&#x2F;</a>
           </li>
           
           <li>
-            <a href="https:&#x2F;&#x2F;github.com&#x2F;mascanho&#x2F;" 
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt&#x2F;lang&#x2F;pt" 
                rel="follow" 
-               target="">https:&#x2F;&#x2F;github.com&#x2F;mascanho&#x2F;</a>
+               target="">https:&#x2F;&#x2F;silmadeiras.pt&#x2F;lang&#x2F;pt</a>
           </li>
           
           <li>
-            <a href="https:&#x2F;&#x2F;behance.com&#x2F;mascanho" 
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt&#x2F;lang&#x2F;en" 
                rel="follow" 
-               target="">https:&#x2F;&#x2F;behance.com&#x2F;mascanho</a>
+               target="">https:&#x2F;&#x2F;silmadeiras.pt&#x2F;lang&#x2F;en</a>
           </li>
           
           <li>
-            <a href="mailto:mascanho@gmail.com" 
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt" 
                rel="follow" 
-               target="">mailto:mascanho@gmail.com</a>
+               target="">https:&#x2F;&#x2F;silmadeiras.pt</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt&#x2F;produtos" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt&#x2F;produtos</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt&#x2F;faq" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt&#x2F;faq</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt&#x2F;catalogos?id=0" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt&#x2F;catalogos?id=0</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt&#x2F;catalogos?id=1" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt&#x2F;catalogos?id=1</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt&#x2F;galeria?id=0" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt&#x2F;galeria?id=0</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt&#x2F;galeria?id=1" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt&#x2F;galeria?id=1</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt&#x2F;galeria?id=2" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt&#x2F;galeria?id=2</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt&#x2F;galeria?id=3" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt&#x2F;galeria?id=3</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt&#x2F;contactos" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt&#x2F;contactos</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt&#x2F;entrar" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt&#x2F;entrar</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt&#x2F;carrinho" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt&#x2F;carrinho</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt</a>
+          </li>
+          
+          <li>
+            <a href="mailto:geral@silmadeiras.pt" 
+               rel="follow" 
+               target="">mailto:geral@silmadeiras.pt</a>
+          </li>
+          
+          <li>
+            <a href="tel:282444225" 
+               rel="follow" 
+               target="">tel:282444225</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt&#x2F;politica-de-privacidade" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt&#x2F;politica-de-privacidade</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt&#x2F;termos-e-condicoes" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt&#x2F;termos-e-condicoes</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt&#x2F;faq" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt&#x2F;faq</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;silmadeiras.pt&#x2F;formulario_livre_resolucao_silmadeiras.pdf" 
+               rel="follow" 
+               target="">https:&#x2F;&#x2F;silmadeiras.pt&#x2F;formulario_livre_resolucao_silmadeiras.pdf</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;www.livroreclamacoes.pt&#x2F;inicio" 
+               rel="follow" 
+               target="_blank">https:&#x2F;&#x2F;www.livroreclamacoes.pt&#x2F;inicio</a>
+          </li>
+          
+          <li>
+            <a href="https:&#x2F;&#x2F;parsis.pt" 
+               rel="follow" 
+               target="_blank">https:&#x2F;&#x2F;parsis.pt</a>
+          </li>
+          
+          <li>
+            <a href="mailto:geral@silmadeiras.pt" 
+               rel="follow" 
+               target="">mailto:geral@silmadeiras.pt</a>
+          </li>
+          
+          <li>
+            <a href="mailto:geral@silmadeiras.pt" 
+               rel="follow" 
+               target="">mailto:geral@silmadeiras.pt</a>
           </li>
           
         </ul>
@@ -401,7 +476,7 @@
     </div>
 
     <div class="section">
-      <h2>Structured Data <span>▶️</span></h2>
+      <h2>Structured Data <span>▶</span></h2>
       <div class="content">
         <pre><code class="language-json">null</code></pre>
       </div>
