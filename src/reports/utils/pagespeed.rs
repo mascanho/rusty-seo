@@ -1,19 +1,18 @@
 use reqwest::Error as ReqwestError;
 use serde::Deserialize;
-use serde_json::{self, Value};
+use std::collections::HashMap;
 use std::fs;
-// Import for handling dynamic JSON
 use std::io::{self, Write};
 use std::path::Path;
 
 use crate::reports::utils;
 
-// const API_KEY: &str = "AIzaSyCCZu9Qxvkv8H0sCR9YPP7aP6CCQTZHFt8";
-
 #[derive(Deserialize, Debug)]
 struct LighthouseResult {
     categories: Categories,
     audits: Option<Audits>,
+    performance_score: Option<f64>,
+    dom_size: Option<ScoreMetric>,
 }
 
 #[derive(Default, Deserialize, Debug)]
@@ -22,6 +21,7 @@ struct Categories {
     best_practices: Option<ScoreMetric>,
     seo: Option<ScoreMetric>,
     pwa: Option<ScoreMetric>,
+    performance: Option<ScoreMetric>,
 }
 
 #[derive(Default, Deserialize, Debug)]
@@ -46,7 +46,7 @@ struct AuditHeading {
 #[derive(Deserialize, Debug)]
 struct AuditItem {
     #[serde(flatten)]
-    other: std::collections::HashMap<String, Value>,
+    other: HashMap<String, serde_json::Value>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -57,6 +57,9 @@ struct Audit {
     #[serde(rename = "displayValue")]
     display_value: Option<String>,
     details: Option<AuditDetails>,
+    score: Option<f64>,
+    domains: Option<Vec<String>>,
+    dom_size: Option<ScoreMetric>, // Corrected to match JSON structure
 }
 
 #[derive(Deserialize, Debug)]
@@ -65,6 +68,10 @@ struct Audits {
     bootup_time: Option<Audit>,
     #[serde(rename = "largest-contentful-paint")]
     largest_contentful_paint: Option<Audit>,
+    #[serde(rename = "dom_size")] // Corrected field name
+    dom_size: Option<Audit>, // Use Audit instead of AuditDetails if it's a single audit item
+    score: Option<Audit>,
+    interactive: Option<Audit>, // Assuming interactive audit has similar structure
 }
 
 #[derive(Deserialize, Debug)]
@@ -74,14 +81,14 @@ struct PageSpeedResponse {
 }
 
 // Check if the API KEY ID exists in the .rustyfrog folder
-fn api_check() -> Result<String, std::io::Error> {
+fn api_check() -> Result<String, io::Error> {
     let dir_path = ".rustyfrog";
     let file_path = format!("{}/API_KEY.json", dir_path);
 
     if Path::new(&file_path).exists() {
         // If the API key file exists, read and return its content
         let api_key_from_file = fs::read_to_string(&file_path)?;
-        Ok(api_key_from_file)
+        Ok(api_key_from_file.trim().to_string())
     } else {
         // Create the folder if it doesn't exist
         if !Path::new(dir_path).exists() {
@@ -93,25 +100,19 @@ fn api_check() -> Result<String, std::io::Error> {
         io::stdout().flush()?; // Make sure the prompt is shown before reading input
         let mut api_key = String::new();
         io::stdin().read_line(&mut api_key)?;
-        let api_key = api_key.trim(); // Trim whitespace/newline
+        let api_key = api_key.trim().to_string(); // Trim whitespace/newline
 
         // Write the API key to the file
-        fs::write(&file_path, api_key)?;
+        fs::write(&file_path, &api_key)?;
 
-        // read the api key from the file
-        let api_key = fs::read_to_string(&file_path)?;
+        println!("API key written to file: {}", api_key);
 
-        // return the api key
-        let API_KEY: String = api_key;
-
-        println!("API key written to file: {}", API_KEY);
-
-        Ok(API_KEY)
+        Ok(api_key)
     }
 }
 
 pub async fn fetch_page_speed(url: &str) -> Result<(), ReqwestError> {
-    let API_KEY = api_check().expect("Failed to read API_KEY");
+    let api_key = api_check().expect("Failed to read API_KEY");
 
     let message = format!("Fetching PageSpeed data for: {}", url);
     utils::loading::loading(message, 3);
@@ -119,15 +120,14 @@ pub async fn fetch_page_speed(url: &str) -> Result<(), ReqwestError> {
     let client = reqwest::Client::new();
     let api_url = format!(
         "https://www.googleapis.com/pagespeedonline/v5/runPagespeed?key={}&url={}",
-        API_KEY, url
+        api_key, url
     );
 
     let response = client.get(&api_url).send().await?;
     let body = response.text().await?;
 
     // Deserialize JSON into PageSpeedResponse struct
-    let page_speed_response: PageSpeedResponse =
-        serde_json::from_str(&body).expect("Failed to parse JSON");
+    let page_speed_response: PageSpeedResponse = serde_json::from_str(&body).unwrap();
 
     // Access and print bootup time details
     if let Some(audits) = &page_speed_response.lighthouse_result.audits {
@@ -152,30 +152,32 @@ pub async fn fetch_page_speed(url: &str) -> Result<(), ReqwestError> {
             }
         }
 
-        // Access and print LCP details
-        if let Some(largest_contentful_paint) = &audits.largest_contentful_paint {
-            println!("Largest Contentful Paint Audit:");
-            println!("  ID: {}", largest_contentful_paint.id);
-            println!("  Title: {}", largest_contentful_paint.title);
-            if let Some(description) = &largest_contentful_paint.description {
+        // Access and print Largest Contentful Paint details
+        if let Some(interactive) = &audits.interactive {
+            println!("Interactive Audit:");
+            println!("  ID: {}", interactive.id);
+            println!("  Title: {}", interactive.title);
+            if let Some(description) = &interactive.description {
                 println!("  Description: {}", description);
             }
-            if let Some(display_value) = &largest_contentful_paint.display_value {
+            if let Some(display_value) = &interactive.display_value {
                 println!("  Display Value: {}", display_value);
             }
-            if let Some(details) = &largest_contentful_paint.details {
-                println!("  Details:");
-                for heading in &details.headings {
-                    println!("    Heading: {} - {}", heading.key, heading.label);
-                }
-                for item in &details.items {
-                    println!("    Item: {:?}", item.other);
-                }
+            if let Some(score) = &interactive.score {
+                println!("  Score: {}", score);
+            }
+        }
+
+        // Access and print dom-size details
+        if let Some(dom_size) = &audits.dom_size {
+            println!("DOM Size Audit:");
+            if let Some(dom_size_score) = &dom_size.score {
+                println!("  Score: {}", dom_size_score);
+            } else {
+                println!("  Score not available");
             }
         }
     }
-
-    // return the metrics that matter from the function
 
     Ok(())
 }
